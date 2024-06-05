@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Pacifico';
+    src: url('/fonts/Pacifico-Regular.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Montserrat';
+    src: url('/fonts/MontserratAlternates-Bold.ttf');
+    font-weight: bold;
+  }
+  @font-face {
+    font-family: 'Montserrat';
+    src: url('/fonts/MontserratAlternates-Regular.ttf');
+    font-weight: regular;
+  }
+}
+@layer components {
+  .cardochka {
+    @apply rounded-83px shadow-normal;
+  }
+  .btn{
+    @apply rounded-55px bg-primary text-white font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-pointer;
+  }
+  .btn:hover{
+    @apply bg-white text-primary;
+  }
+  .btn-inactive{
+    @apply rounded-55px bg-white text-primary font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-default;
+  }
+  strong{
+    @apply font-bold text-primary;
+  }
+  body *{
+    @apply font-montserrat;
+  }
+  select{
+    @apply bg-left-40px;
+  }
+}
