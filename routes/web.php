@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
       return Inertia::render('CreateEvent');
   });
   Route::post('/events/create', [EventController::class, 'newEvent'])->name('createEvent');
+  Route::post('/events/imgUpload', [EventController::class, 'fileUpload'])->name('uploadFile');
 });
 
 Route::get('/cabinet', function () {
@@ -40,3 +41,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/api.php';

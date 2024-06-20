@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->datetime('datetime');
+            $table->text('short_description');
             $table->text('description');
             $table->integer('place_id');
             $table->integer('price'); 

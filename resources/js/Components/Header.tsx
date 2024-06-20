@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import ContentContext from "./contexts/ContentContext";
-import { usePage } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import ContentSelectionButtons from "./ContentSelectionButtons";
 import AuthorizedHeaderButtons from "./AuthorizedHeaderButtons";
 import UnauthorizedHeaderButtons from "./UnauthorizedHeaderButtons";
@@ -13,9 +13,9 @@ export default function Header(){
   return(
 
     <header className="container flex flex-wrap mt-3 items-center justify-between max-w-7xl">
-      <a href="/">
+      <Link href="/">
         <Logo />
-      </a>
+      </Link>
       
       {/* Если мы находимся на главной (ContentContext !== undefined) и пользователь не авторизован, то мы выводим кнопки выбора контента */}
       {useContext(ContentContext) !== undefined && user == 'undefined' && <ContentSelectionButtons />}

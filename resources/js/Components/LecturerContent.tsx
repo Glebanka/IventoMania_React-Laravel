@@ -1,3 +1,5 @@
+import { Link } from "@inertiajs/react";
+
 export default function LecturerContent(){
 
   return(
@@ -11,7 +13,7 @@ export default function LecturerContent(){
 
               <p className="text-40px mb-3 xl:mb-0 text-center leading-tight">ИвентоМания — пространство возможностей, где вы можете делиться своим опытом и вдохновлять других на творчество и самовыражение.</p>
 
-              <a href="list" className="btn w-fit-content">Создать<br/>Мастер-класс</a>
+              <Link href="/login" className="btn w-fit-content">Создать<br/>Мастер-класс</Link>
             </div>
           </div>
         </div>
@@ -50,7 +52,7 @@ export default function LecturerContent(){
           </div>
         </div>
 
-        <a href="list" className="btn w-fit-content">Создать<br/>Мастер-класс</a>
+        <Link href="/login" className="btn w-fit-content">Создать<br/>Мастер-класс</Link>
         </div>
   )
 }

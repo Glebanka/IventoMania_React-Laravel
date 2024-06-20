@@ -1,5 +1,5 @@
 import PageLayout from "@/Layouts/PageLayout";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import { FormEventHandler, useEffect } from "react";
 
 export default function Register(){
@@ -142,7 +142,7 @@ export default function Register(){
 
         <input type="submit" className="btn btn-primary px-5 py-3 w-fit-content text-2xl mt-5" value="Зарегистрироваться"></input>
 
-        <p className="text-primary text-2xl font-bold">или <a className="underline" href={ route('login') }>Войти</a></p>
+        <p className="text-primary text-2xl font-bold">или <Link className="underline" href={ route('login') }>Войти</Link></p>
 
       </form>
   </div>

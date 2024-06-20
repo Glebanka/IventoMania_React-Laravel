@@ -22,6 +22,7 @@
   .cardochka {
     @apply rounded-83px shadow-normal;
   }
+  /* bg-gradient-to-tr from-primary to-primaryTonesUp */
   .btn{
     @apply rounded-55px bg-primary text-white font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-pointer;
   }
@@ -30,6 +31,18 @@
   }
   .btn-inactive{
     @apply rounded-55px bg-white text-primary font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-default;
+  }
+  .btn-small{
+    @apply rounded-lg bg-gray-100 text-black font-bold text-xl w-24 py-2 text-center shadow-small duration-500 cursor-pointer;
+  }
+  .btn-small:hover{
+    @apply bg-primary text-white shadow-small-button; 
+  }
+  .btn-small-inactive{
+    @apply rounded-lg bg-primary text-white font-bold w-26 text-xl text-center shadow-small-button duration-500 cursor-pointer;
+  }
+  .btn-small-unavailable{
+    @apply rounded-lg bg-gray-100 text-gray-300 font-bold w-26 text-xl text-center shadow-small duration-500 cursor-pointer;
   }
   strong{
     @apply font-bold text-primary;

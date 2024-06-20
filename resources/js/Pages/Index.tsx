@@ -1,4 +1,4 @@
-import ContentContext, { ContentContextProps } from "@/Components/contexts/ContentContext";
+import ContentContext from "@/Components/contexts/ContentContext";
 import LecturerContent from "@/Components/LecturerContent";
 import ListenerContent from "@/Components/ListenerContent";
 import ContentProvider from "@/Components/providers/ContentProvider";

@@ -8,15 +8,15 @@ export default function Event( {event} ){
   return(
     <>
     {date == event.date && <div key={event.id} className="flex xl:flex-row flex-col justify-between align-center cardochka">
-              
-            <img className="rounded-83px w-3/6 self-center" src='assets/OIG2 1(1).png'></img>
+            
+            <img className="rounded-83px w-3/6 self-center" src={event.imagePath}></img>
             
             <div className="border-radius w-3/6 flex flex-col sm:justify-between py-16 px-10 self-center xl:self-stretch">
               
               
               <h3 className='text-primary text-4xl font-bold'>{event.name}</h3>
               
-              <p className="text-xl leading-tight mb-3 xl:mb-0 hyphens-auto">{event.description} </p>
+              <p className="text-xl leading-tight mb-3 xl:mb-0 hyphens-auto">{event.short_description} </p>
               
               <div className="flex-column d-flex mb-3 xl:mb-0">
 

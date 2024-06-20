@@ -5,10 +5,10 @@ interface DateProviderProps {
 }
 // Компонент-провайдер, который предоставляет текущую тему и функцию для ее изменения через контекст
 export default function DateProvider({ children }: DateProviderProps){
-  const [date, setDate] = useState(new Date());
+  const [date, setNewDate] = useState(new Date());
   
   return (
-  <DateContext.Provider value={{ date, setDate }}>
+  <DateContext.Provider value={{ date, setNewDate }}>
     {children}
   </DateContext.Provider>
   );

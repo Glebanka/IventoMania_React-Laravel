@@ -6,9 +6,12 @@ use App\Models\Event;
 use App\Models\User;
 use Inertia\Inertia;
 use Datetime;
+use Storage;
 
 
 class EventController extends Controller{
+
+  // функция забора данных с базы данных для вывода на /events
   public function showEvents(){
 
     $events = Event::all()->map(function ($event) {
@@ -44,57 +47,167 @@ class EventController extends Controller{
       $user = User::where('id', $event -> lecturer_id)->first();
 
       $date = ltrim($date->format('d'), 0) . ' ' . ltrim($date->format('m'), 0);
-      
 
+      $imagePath = Storage::url("public/events/{$event->id}.jpg");
+      // dd([
+      //   'id' => $event->id,
+      //   'name' => $event->name,
+      //   'short_description' => $event->short_description,
+      //   'place_id' => $event->place_id,
+      //   'price' => $event->price,
+      //   'date' => $date,
+      //   'formattedDate' => $formattedDate,
+      //   'formattedTime' => $formattedTime,
+      //   'lecturer' => $user ? $user->fullname : null,
+      //   'imagePath' => $imagePath,
+      // ]);
       return [
         'id' => $event->id,
         'name' => $event->name,
-        'description' => $event->description,
+        'short_description' => $event->short_description,
         'place_id' => $event->place_id,
         'price' => $event->price,
         'date' => $date,
         'formattedDate' => $formattedDate,
         'formattedTime' => $formattedTime,
-        'lecturer' => $user ? $user->fullname : null
+        'lecturer' => $user ? $user->fullname : null,
+        'imagePath' => $imagePath,
       ];
     });
-
+    
     return Inertia::render('Events',[
-      'events' => $events
+      'events' => $events,
     ]);
   }
 
+  // функция для показа страницы создания ивента
+
+  public function checkAvailability(Request $request)
+    {
+      $date = $request->input('date');
+        if (!$date) {
+            return response()->json(['error' => 'Date is required'], 400);
+        }
+
+      $times = ['8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'];
+      $placeIds = [1, 2, 3];
+      $availability = [];
+
+      foreach ($times as $time) {
+          $availability[$time] = true;
+
+          foreach ($placeIds as $placeId) {
+              $datetime = $date . ' ' . $time . ':00:00';
+              $exists = Event::where('datetime', $datetime)
+                  ->where('place_id', $placeId)
+                  ->exists();
+
+              if (!$exists) {
+                  $availability[$time] = false;
+                  break;
+              }
+          }
+      }
+
+    return response()->json($availability);
+  }
+
+  // функция записи данных в базу данных
   public function newEvent(Request $request)
     {
+      // dd($request);
       $request->validate([
         'name' => ['required', 'string'],
+        'short_description' => ['required', 'string'],
         'description' => ['required', 'string'],
-        'place_id' => ['required', 'integer'],
         'price' => ['required', 'integer'],
         'lecturer_id' => ['required', 'integer'],
         'date' => ['required', 'string'],
         'time' => ['required', 'string'],
+        'file' => 'required|file|mimes:jpeg,png,jpg,gif|max:10240', // Максимум 10МБ
       ]);
+
+        // Работа с датами
         $date = $request['date'];
         $hour = $request['time'];
         $datetime = ['datetime' => $date . ' ' . $hour . ':00:00'];
-
         $request->merge($datetime);
 
-        $this->create($request->all());
 
-        return redirect()->route('cabinet');
+        // Поиск свободной зоны
+        // Получаем все place_id
+        $placeIds = [1, 2, 3];
+
+        // Поиск первого свободного place_id
+        $availablePlaceId = null;
+        foreach ($placeIds as $placeId) {
+            $exists = Event::where('datetime', $datetime['datetime'])
+                ->where('place_id', $placeId)
+                ->exists();
+            
+            if (!$exists) {
+                $availablePlaceId = ['place_id' => $placeId];
+                break;
+            }
+        }
+        // Если нет доступного place_id, возвращаем ошибку
+        if (is_null($availablePlaceId)) {
+          return response()->json(['error' => 'Нет доступных зон для выбора под эту дату и время'], 422);
+        }
+        $request->merge($availablePlaceId);
+
+
+        // Вызов функции создания ивента с передачей всех значений в $request
+        $event = $this->create($request->all());
+
+        // $file = $request->file('file');
+
+        return response()->json(['event' => $event], 201);
+        // // return redirect()->route('events');
+        // return Inertia::render('EventUpload', [
+        //   'event' => $event->only('id', 'name', 'datetime', 'short_description', 'description', 'place_id', 'price', 'confirmed', 'lecturer_id'),
+        //   'file' => $file,
+        // ]);
     }
     protected function create(array $data)
     {
       return Event::create([
           'name' => $data['name'],
           'datetime' => $data['datetime'],
+          'short_description' => $data['short_description'],
           'description' => $data['description'],
           'place_id' => $data['place_id'],
           'price' => $data['price'],
           'confirmed' => '0',
           'lecturer_id' => $data['lecturer_id'],
       ]);
+    }
+
+    public function fileUpload(Request $request)
+    {
+      // dd($request);
+        // Валидация файла и event_id
+        $request->validate([
+            'file' => 'required|file|mimes:jpeg,png,jpg,gif|max:10240', // Максимум 10МБ
+            'event_id' => 'required|integer|exists:events,id',
+        ]);
+
+        // Получение ID ивента
+        $eventId = $request->input('event_id');
+
+        // Получаем файл из запроса
+        $file = $request->file('file');
+
+        // Генерируем уникальное имя файла с привязкой к ID ивента
+        $fileName = $eventId . '.' . $file->getClientOriginalExtension();
+
+        // Сохраняем файл в локальном хранилище (в папку public/events)
+        $filePath = $file->storeAs('public/events', $fileName);
+
+        // Возвращаем путь сохраненного файла или другую необходимую информацию
+        return response()->json([
+            'message' => 'Файл успешно загружен',
+            'file_path' => Storage::url($filePath),
+        ], 200);
     }
 }

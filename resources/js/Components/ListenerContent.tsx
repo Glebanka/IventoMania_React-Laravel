@@ -1,3 +1,5 @@
+import { Link } from "@inertiajs/react";
+
 export default function ListenerContent(){
 
   return(
@@ -11,7 +13,7 @@ export default function ListenerContent(){
 
               <p className="text-40px mb-3 xl:mb-0 text-center leading-tight"><strong>ИвентоМания</strong> — праздник творчества, где вы можете раскрыть свой потенциал и <strong>вдохновиться</strong> на создание чего-то <strong>уникального</strong>.</p>
 
-              <a href="events" className="btn w-fit-content">Выбрать<br/>Мастер-класс</a>
+              <Link href="/events" className="btn w-fit-content">Выбрать<br/>Мастер-класс</Link>
             </div>
           </div>
         </div>
@@ -47,7 +49,7 @@ export default function ListenerContent(){
           </div>
         </div>
 
-        <a href="events" className="btn w-fit-content">Выбрать<br/>Мастер-класс</a>
+        <Link href="/events" className="btn w-fit-content">Выбрать<br/>Мастер-класс</Link>
         </div>
     </div>
   )
