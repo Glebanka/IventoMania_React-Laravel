@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect} from "react";
 import DateContext from "./contexts/DateContext";
-import { router } from "@inertiajs/react";
 
 
 // создает пять значений {currentDate, dayOfWeek, day, month } и возращает массив
@@ -28,7 +27,7 @@ const generateNextFiveDays = () => {
   };
 
 
-  export default function DateButtons ( {size, sendAvailability} ){
+  export default function DateButtons ( {size, sendAvailability} : {size?: string, sendAvailability?: Function} ){
     // создаем пять значений {currentDate, dayOfWeek, day, month } и отдаем их в новый массив dates 
     const dates = generateNextFiveDays();
 
@@ -47,7 +46,6 @@ const generateNextFiveDays = () => {
         fetch(`/api/availability?date=${formattedDate}`)
           .then(response => response.json())
           .then(data => {
-            console.log(data);
             sendAvailability(data);
           })
           .catch(error => {

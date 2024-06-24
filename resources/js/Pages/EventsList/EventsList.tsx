@@ -1,10 +1,9 @@
 import DateButtons from "@/Components/DateButtons";
 import DateProvider from "@/Components/providers/DateProvider";
 import PageLayout from "@/Layouts/PageLayout";
-import Event from "@/Components/Event";
 import { useContext } from "react";
 import DateContext from "@/Components/contexts/DateContext";
-import CheckForEvent from "@/Components/CheckForEvent";
+import Event from "./Event";
 
 export default function Events( { events } ){
   function EventsList(){
@@ -12,12 +11,9 @@ export default function Events( { events } ){
     const month = date.getMonth() + 1;
     date = date.getDate() + ' ' + month;
     return(<>
-    
       {events.map(event => (
         <>
-          {/* <CheckForEvent> */}
           {date == event.date && <Event event={event}></Event>}
-          {/* </ CheckForEvent> */}
         </>
       ))}
     </>

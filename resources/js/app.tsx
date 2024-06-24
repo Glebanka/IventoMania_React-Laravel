@@ -5,6 +5,17 @@ import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
+export interface SVGProps {
+  className?: string;
+  w?: number;
+  h?: number;
+  fill?: string;
+}
+export interface UserProps {
+  id: number;
+  fullname: string;
+  user_type_id?: number;
+}
 
 createInertiaApp({
     title: (title) => `${title}`,

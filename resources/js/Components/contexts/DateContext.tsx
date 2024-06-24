@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 
 export interface DateContextProps {
-  date: string;
-  setNewDate(content: string): void;
+  date: Date;
+  setNewDate(): void;
 }
 export default createContext<DateContextProps | undefined>(undefined);

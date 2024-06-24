@@ -17,22 +17,32 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Index');
+    return Inertia::render('Index/Index');
 });
 
-Route::get('/events', [EventController::class, 'showEvents']);
+Route::get('/event/{id}', [EventController::class, 'showEvent'])->name('event');
+Route::get('/events', [EventController::class, 'showEvents'])->name('events');
 
 Route::middleware('auth')->group(function () {
   Route::get('/events/create', function () {
-      return Inertia::render('CreateEvent');
+      return Inertia::render('CreateEvent/CreateEvent');
   });
   Route::post('/events/create', [EventController::class, 'newEvent'])->name('createEvent');
   Route::post('/events/imgUpload', [EventController::class, 'fileUpload'])->name('uploadFile');
+  Route::post('/events/rentEvent', [EventController::class, 'rentEvent'])->name('rentEvent');
+
+
+  Route::get('/cabinet/admin', function () {
+      return Inertia::render('Cabinet/Admin');
+  });
+  Route::get('/cabinet/user', function () {
+      return Inertia::render('Cabinet/User');
+  });
+  Route::get('/cabinet/lecturer', function () {
+      return Inertia::render('Cabinet/Lecturer');
+  });
 });
 
-Route::get('/cabinet', function () {
-    return Inertia::render('Cabinet/Admin');
-});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

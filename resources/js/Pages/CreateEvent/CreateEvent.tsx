@@ -1,21 +1,27 @@
+import { UserProps } from "@/app";
 import DateContext, { DateContextProps } from "@/Components/contexts/DateContext";
 import DateButtons from "@/Components/DateButtons";
 import DateProvider from "@/Components/providers/DateProvider";
 import CloseSVG from "@/Components/SVGs/CloseSVG";
-import UploadSVG from "@/Components/SVGs/UploadSVG";
 import PageLayout from "@/Layouts/PageLayout";
 import { useForm, usePage } from "@inertiajs/react";
 import axios from "axios";
-import { FormEventHandler, useContext, useEffect, useState } from "react";
+import { FormEventHandler, SetStateAction, useContext, useEffect, useState } from "react";
+import ImageInput from "./Components/ImageInput";
 
-const DateComponent: React.FC = ({ sendDate }) => {
+
+interface Availability {
+  [key: string]: boolean;
+}
+
+function DateComponent({ sendDate } : {sendDate : Function}){
   const context = useContext<DateContextProps | undefined>(DateContext);
 
   if (!context) {
     throw new Error("DateComponent must be used within a DateProvider");
   }
 
-  let { date } : { Date } = context;
+  let { date } = context;
   const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
   const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
@@ -26,30 +32,24 @@ const DateComponent: React.FC = ({ sendDate }) => {
   const year = date.getFullYear();
 
   useEffect(() => {
-    console.log('Компонент смонтирован');
-    // 2024-06-10
-    sendDate(date = year + '-' + monthNumber + '-' + day);
-
-    return () => {
-      console.log('Компонент размонтирован');
-    };
+    let newDate = year + '-' + monthNumber + '-' + day;
+    sendDate(newDate);
   }, []); // Пустой массив зависимостей указывает на выполнение только при монтировании и размонтировании
   
   return (
     <div>
-      <p>{date = day + ' ' + month + ', ' + dayOfWeek}</p>
+      <p>{day + ' ' + month + ', ' + dayOfWeek}</p>
     </div>
   );
 };
 
-
 export default function CreateEvent(){
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState<Date | null>(null);
 
   // Функция для обновления состояния на основании данных от дочернего компонента DateComponent
-  const handleDataFromChild = (date) => {
+  const handleDataFromChild = (date : Date) => {
     setDate(date);
-    setData('date', date);
+    setData('date', date.toString());
   };
 
   // отслеживание состояния переменной time 
@@ -62,10 +62,10 @@ export default function CreateEvent(){
   }
 
 
-  const { props } = usePage();
+  const { props } = usePage<{user: UserProps}>();
   const user = props.user;
 
-  const { data, setData, errors, progress } = useForm({
+  const { data, setData, progress } = useForm({
     name: '',
     date: '',
     short_description: '',
@@ -76,10 +76,20 @@ export default function CreateEvent(){
     file: null,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     setData(e.target.name, e.target.value);
   };
-  
+
+  interface Errors {
+    name?: string;
+    date?: string;
+    short_description?: string;
+    description?: string;
+    time?: string;
+    price?: string;
+    file?: string;
+  }
+  const [errors, setErrors] = useState<Errors>({});
   const submit: FormEventHandler = async (e) => {
     e.preventDefault();
     try {
@@ -91,22 +101,30 @@ export default function CreateEvent(){
         time: data.time,
         price: data.price,
         lecturer_id: data.lecturer_id,
-      });
-  
+        file: data.file,
+      }, {headers: {
+        'Content-Type': 'multipart/form-data',
+      }});
+      
       const eventId = response.data.event.id;
 
       // Затем загружаем файл, связанный с этим ивентом
       const formData = new FormData();
-      formData.append('file', data.file);
+      if (data.file !== null) {
+        formData.append('file', data.file);
+      }
       formData.append('event_id', eventId);
 
       await axios.post(route('uploadFile'), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }});
-      // кароче сделать обработку ошибок иначе нету
-    } catch (error) {
-      console.error('Ошибка при создании ивента или загрузке файла:', error);
+    } catch(error : any) {
+      if (error.response && error.response.data && error.response.data.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        console.error('Ошибка при создании ивента или загрузке файла:', error);
+      }
     }
   };
 
@@ -118,29 +136,14 @@ export default function CreateEvent(){
     setPopUpOpened(popUpOpened);
     }
 
-  const [availability, setAvailability] = useState({});
+  const [availability, setAvailability] = useState<Availability>({});
 
   // Функция для обновления состояния на основании данных от дочернего компонента DateButtons
-  const checkAvailability = (availability) => {
+  const checkAvailability = (availability: SetStateAction<Availability>) => {
     setAvailability(availability);
   };
 
-  // Хук для превью изображения
-  const [preview, setPreview] = useState(null);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setData('file', file);
-
-    // Создание превью
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result);
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
+  
   
   
   return(
@@ -167,47 +170,17 @@ export default function CreateEvent(){
 
         </div>
 
-        {progress && (
-            <progress value={progress.percentage} max="100">
-              {progress.percentage}%
-            </progress>
-        )}
-
         <div className="flex flex-col gap-3">
           
           <p className="text-2xl text-primary font-bold">Изображение</p>
 
-          <div className={` ${preview == null ? 'w-[600px] relative border-2 border-gray-300 border-dashed rounded-3xl p-6' : 'relative'}`} id="dropzone">
-              <input type="file"
-              className="absolute inset-0 w-full h-full opacity-0 z-50 cursor-pointer"
-              onChange={handleFileChange}
-              />
-              <div className={`text-center ${preview == null ? '' : 'hidden'}`} >
-                  <UploadSVG className="mx-auto h-12 w-12" w={12} h={12}></UploadSVG>
-
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">
-                      <label htmlFor="file-upload" className="relative">
-                          <span>Перетащите</span>
-                          <span className="text-primary"> или загрузите</span>
-                          <input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                      </label>
-                  </h3>
-                  <p className="mt-1 text-xs text-gray-500">
-                      PNG, JPG, GIF до 10MB
-                  </p>
-              </div>
-              {preview && (
-                <img src={preview} className="mt-4 mx-auto max-w-[600px] rounded-55px shadow-normal" id="preview" alt="Preview" />
-              )}
-              {errors.file && <strong className="text-red-400">{errors.file}</strong>}
-
-
-          </div>
-        {progress && (
-          <progress value={progress.percentage} max="100">
-            {progress.percentage}%
-          </progress>
-        )}
+          <ImageInput setData={setData} />
+          {errors.file && <strong className="text-red-400">{errors.file}</strong>}
+          {progress && (
+            <progress value={progress.percentage} max="100">
+              {progress.percentage}%
+            </progress>
+          )}
         </div>
 
 
@@ -281,7 +254,7 @@ export default function CreateEvent(){
         {/* Поп-ап, включается по кнопке выше */}
         {popUpOpened == true ? 
         <div className="w-full h-full fixed left-0 top-0 bg-slate-700 bg-opacity-55 z-10 ">
-          <div className="fixed top-2/4 right-2/4 translate-x-1/2 -translate-y-1/2 bg-white w-600px h-5/6 rounded-3xl px-6 py-5 flex flex-col gap-9">
+          <div className="fixed top-2/4 right-2/4 translate-x-1/2 -translate-y-1/2 bg-white w-600px h-5/6 rounded-3xl px-6 py-5 flex flex-col gap-9 ">
             <button onClick={(event) => showPopUp(event, false)} className="absolute right-6">
               <CloseSVG />
             </button>

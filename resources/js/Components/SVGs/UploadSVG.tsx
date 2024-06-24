@@ -1,10 +1,6 @@
-interface CloseSVGProps {
-  className?: string;
-  w?: number;
-  h?: number;
-}
+import { SVGProps } from "@/app";
 
-export default function CloseSVG({ className, w, h } : CloseSVGProps){
+export default function CloseSVG({ className, w, h } : SVGProps){
   return(
 
   <svg className={className} fill="#000000" width={w} height={h} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

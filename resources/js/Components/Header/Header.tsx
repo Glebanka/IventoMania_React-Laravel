@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
-import ContentContext from "./contexts/ContentContext";
 import { Link, usePage } from "@inertiajs/react";
+import ContentContext from "../contexts/ContentContext";
 import ContentSelectionButtons from "./ContentSelectionButtons";
-import AuthorizedHeaderButtons from "./AuthorizedHeaderButtons";
 import UnauthorizedHeaderButtons from "./UnauthorizedHeaderButtons";
-import Logo from "./Logo";
+import AuthorizedHeaderButtons from "./AuthorizedHeaderButtons";
+import Logo from "../Logo";
 
 export default function Header(){
   const { props } = usePage();

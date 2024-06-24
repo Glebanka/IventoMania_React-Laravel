@@ -1,5 +1,6 @@
 import { useContext } from "react";
-import DateContext from "./contexts/DateContext";
+import DateContext from "../../Components/contexts/DateContext";
+import { Link } from "@inertiajs/react";
 
 export default function Event( {event} ){
   let { date } = useContext(DateContext);
@@ -9,7 +10,8 @@ export default function Event( {event} ){
     <>
     {date == event.date && <div key={event.id} className="flex xl:flex-row flex-col justify-between align-center cardochka">
             
-            <img className="rounded-83px w-3/6 self-center" src={event.imagePath}></img>
+            {/* <img className="rounded-83px w-3/6 self-center" src={event.imagePath}></img> */}
+            <div className="rounded-83px w-[600px] h-[600px] bg-cover bg-no-repeat bg-center self-center" style={{ backgroundImage: `url(${event.imagePath})` }}></div>
             
             <div className="border-radius w-3/6 flex flex-col sm:justify-between py-16 px-10 self-center xl:self-stretch">
               
@@ -42,7 +44,7 @@ export default function Event( {event} ){
                 </div>
 
               </div>
-              <a href="event" className="btn btn-primary px-12 text-3xl w-fit">Записаться на<br />Мастер-класс</a>
+              <Link href={`/event/${event.id}`} className="btn btn-primary px-12 text-3xl w-fit">Записаться на<br />Мастер-класс</Link>
             </div>
             
           </div>}

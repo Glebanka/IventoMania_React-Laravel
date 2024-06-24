@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\UsersOnEvents;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\User;
@@ -8,8 +9,62 @@ use Inertia\Inertia;
 use Datetime;
 use Storage;
 
-
 class EventController extends Controller{
+  
+  public function checkSeatAvailability(Request $request)
+  {
+    $eventID = $request->input('id');
+      if (!$eventID) {
+          return response()->json(['error' => 'EventID is required'], 400);
+      }
+
+    $seats = ['1', '2', '3', '4', '5', '6', '7', '8'];
+    $availability = [];
+
+    foreach ($seats as $seat) {
+      $availability[$seat] = true;
+      $exists = UsersOnEvents::where('event_id', $eventID)
+      ->where('seat_id', $seat)
+      ->exists();
+      if ($exists) {
+        $availability[$seat] = false;
+      }
+    }
+
+    return response()->json($availability);
+  }
+
+  // функция забора данных с базы данных для вывода на /event
+  public function rentEvent(Request $request){
+    // dd($request);
+    $request->validate([
+      'seat_id' => ['required', 'string'],
+      'event_id' => ['required', 'string'],
+      'user_id' => ['required', 'string'],
+    ]);
+
+    UsersOnEvents::create([
+      'seat_id' => $request['seat_id'],
+      'event_id' => $request['event_id'],
+      'user_id' => $request['user_id'],
+    ]);
+    return redirect()->intended('/');
+  }
+  // функция забора данных с базы данных для вывода на /event
+  public function showEvent($id){
+    $event = Event::findOrFail($id);
+
+    // добавляем имя пользователя
+    $user = User::where('id', $event -> lecturer_id)->first();
+    $userName = $user->fullname;
+
+    $imagePath = Storage::url("public/events/{$id}.jpg");
+    return Inertia::render('Event',[
+      'event' => $event,
+      'imagePath' => $imagePath,
+      'userName' => $userName,
+    ]);
+  }
 
   // функция забора данных с базы данных для вывода на /events
   public function showEvents(){
@@ -75,7 +130,7 @@ class EventController extends Controller{
       ];
     });
     
-    return Inertia::render('Events',[
+    return Inertia::render('EventsList/EventsList',[
       'events' => $events,
     ]);
   }
@@ -204,10 +259,8 @@ class EventController extends Controller{
         // Сохраняем файл в локальном хранилище (в папку public/events)
         $filePath = $file->storeAs('public/events', $fileName);
 
+
         // Возвращаем путь сохраненного файла или другую необходимую информацию
-        return response()->json([
-            'message' => 'Файл успешно загружен',
-            'file_path' => Storage::url($filePath),
-        ], 200);
+        return redirect(route('events'));
     }
 }

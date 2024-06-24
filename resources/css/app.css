@@ -23,6 +23,7 @@
     @apply rounded-83px shadow-normal;
   }
   /* bg-gradient-to-tr from-primary to-primaryTonesUp */
+
   .btn{
     @apply rounded-55px bg-primary text-white font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-pointer;
   }
@@ -32,6 +33,10 @@
   .btn-inactive{
     @apply rounded-55px bg-white text-primary font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-default;
   }
+  .btn-unavailable{
+    @apply rounded-55px bg-[#E0E0E0] text-[#AEAEAE] font-bold py-4 px-8 text-3xl text-center shadow-normal duration-500 cursor-default;
+  }
+
   .btn-small{
     @apply rounded-lg bg-gray-100 text-black font-bold text-xl w-24 py-2 text-center shadow-small duration-500 cursor-pointer;
   }
@@ -44,6 +49,20 @@
   .btn-small-unavailable{
     @apply rounded-lg bg-gray-100 text-gray-300 font-bold w-26 text-xl text-center shadow-small duration-500 cursor-pointer;
   }
+
+  .btn-square{
+    @apply rounded-lg bg-white text-black font-bold text-3xl w-[120px] h-[120px] text-center shadow-small duration-500 cursor-pointer;
+  }
+  .btn-square:hover{
+    @apply bg-primary text-white shadow-small-button; 
+  }
+  .btn-square-inactive{
+    @apply rounded-lg bg-primary text-white font-bold w-[120px] h-[120px] text-3xl text-center shadow-small-button duration-500 cursor-pointer;
+  }
+  .btn-square-unavailable{
+    @apply rounded-lg bg-[#E0E0E0] text-[#AEAEAE] font-bold w-[120px] h-[120px] text-3xl text-center shadow-small duration-500;
+  }
+
   strong{
     @apply font-bold text-primary;
   }

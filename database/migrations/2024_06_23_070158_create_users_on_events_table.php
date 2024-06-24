@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('images', function (Blueprint $table) {
-        $table->id();
-        $table->string('path');
-        $table->unsignedBigInteger('entity_id'); // измените название и тип в зависимости от ваших нужд
-        $table->timestamps();
-      });
+        Schema::create('users_on_events', function (Blueprint $table) {
+            $table->id();
+            $table->integer('seat_id');
+            $table->integer('event_id');
+            $table->integer('user_id');
+        });
     }
 
     /**
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('users_on_events');
     }
 };

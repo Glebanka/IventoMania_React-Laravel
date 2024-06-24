@@ -1,6 +1,6 @@
 import ContentContext from "@/Components/contexts/ContentContext";
-import LecturerContent from "@/Components/LecturerContent";
-import ListenerContent from "@/Components/ListenerContent";
+import LecturerContent from "@/Pages/Index/LecturerContent";
+import ListenerContent from "@/Pages/Index/ListenerContent";
 import ContentProvider from "@/Components/providers/ContentProvider";
 import PageLayout from "@/Layouts/PageLayout";
 import { useContext } from "react";
