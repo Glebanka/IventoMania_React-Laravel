@@ -17,6 +17,26 @@ export interface UserProps {
   user_type_id?: number;
 }
 
+export interface EventInterface {
+  id: number;
+  name: string;
+  datetime: string;
+  short_description: string;
+  description: string;
+  place_id: number;
+  price: string;
+  confirmed: boolean;
+  lecturer_id: number;
+
+  // Названия переменных с бекенда
+  seat_id: string;
+  date: string;
+  imagePath: string;
+  formattedDate: string;
+  formattedTime: string;
+  lecturer: string;
+}
+
 createInertiaApp({
     title: (title) => `${title}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.tsx`, import.meta.glob('./Pages/**/*.tsx')),

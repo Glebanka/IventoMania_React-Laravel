@@ -8,7 +8,7 @@ export default function Event( {event} ){
   date = date.getDate() + ' ' + month;
   return(
     <>
-    {date == event.date && <div key={event.id} className="flex xl:flex-row flex-col justify-between align-center cardochka">
+    {date == event.date && <div className="flex xl:flex-row flex-col justify-between align-center cardochka">
             
             {/* <img className="rounded-83px w-3/6 self-center" src={event.imagePath}></img> */}
             <div className="rounded-83px w-[600px] h-[600px] bg-cover bg-no-repeat bg-center self-center" style={{ backgroundImage: `url(${event.imagePath})` }}></div>

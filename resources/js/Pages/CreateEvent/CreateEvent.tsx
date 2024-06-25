@@ -9,7 +9,6 @@ import axios from "axios";
 import { FormEventHandler, SetStateAction, useContext, useEffect, useState } from "react";
 import ImageInput from "./Components/ImageInput";
 
-
 interface Availability {
   [key: string]: boolean;
 }

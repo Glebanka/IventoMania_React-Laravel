@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CabinetController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -31,16 +32,12 @@ Route::middleware('auth')->group(function () {
   Route::post('/events/imgUpload', [EventController::class, 'fileUpload'])->name('uploadFile');
   Route::post('/events/rentEvent', [EventController::class, 'rentEvent'])->name('rentEvent');
 
+  Route::get('/cabinet/user', [CabinetController::class, 'showUserCabinet']);
+  Route::post('/cabinet/user/cancelRent', [CabinetController::class, 'cancelRent']);
 
-  Route::get('/cabinet/admin', function () {
-      return Inertia::render('Cabinet/Admin');
-  });
-  Route::get('/cabinet/user', function () {
-      return Inertia::render('Cabinet/User');
-  });
-  Route::get('/cabinet/lecturer', function () {
-      return Inertia::render('Cabinet/Lecturer');
-  });
+  Route::get('/cabinet/admin', [CabinetController::class, 'showAdminCabinet']);
+
+  Route::get('/cabinet/lecturer', [CabinetController::class, 'showLecturerCabinet']);
 });
 
 

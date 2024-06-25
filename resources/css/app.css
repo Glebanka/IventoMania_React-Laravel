@@ -62,6 +62,9 @@
   .btn-square-unavailable{
     @apply rounded-lg bg-[#E0E0E0] text-[#AEAEAE] font-bold w-[120px] h-[120px] text-3xl text-center shadow-small duration-500;
   }
+  .btn-square-inactived{
+    @apply rounded-lg bg-primary text-white font-bold w-[120px] h-[120px] text-3xl text-center shadow-small-button duration-500;
+  }
 
   strong{
     @apply font-bold text-primary;

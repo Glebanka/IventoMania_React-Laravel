@@ -1,4 +1,4 @@
-import { UserProps } from "@/app";
+import type { EventInterface, UserProps } from "@/app";
 import CalendarSVG from "@/Components/SVGs/CalendarSVG";
 import DescSVG from "@/Components/SVGs/DescSVG";
 import MapSVG from "@/Components/SVGs/MapSVG";
@@ -9,19 +9,8 @@ import { router, usePage } from "@inertiajs/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-interface Event {
-  id: number;
-  name: string;
-  datetime: string;
-  short_description: string;
-  description: string;
-  place_id: number;
-  price: string;
-  confirmed: boolean;
-  lecturer_id: number;
-}
 interface EventProps{
-  event: Event;
+  event: EventInterface;
   imagePath?: string;
   userName?: string;
 }
@@ -46,14 +35,13 @@ function Rent({event} : EventProps){
   }, []);
 
   // проверяем что за пользователь сейчас зарегистрирован
-  const { props } = usePage<{ user: UserProps | 'undefined' }>();
+  const { props } = usePage<{ user: UserProps | undefined }>();
   const user = props.user;
 
   const [seat, setSeat] = useState('');
 
   function rent(){
-    if (user == 'undefined') {
-      localStorage.setItem('seat', seat);
+    if (user == undefined) {
       router.visit('/login', {
         method: 'get',
       });
@@ -73,39 +61,71 @@ function Rent({event} : EventProps){
         console.error('Error:', error);
       });
   }
+
+  const [userOnEvent, setUserOnEvent] = useState(Boolean);
+
+  useEffect(() => {
+    if (user) {
+      axios.post('/api/userOnEventCheck', {
+        user_id: user.id,
+        event_id: event.id,
+      })
+        .then(response => {
+          setUserOnEvent(response.data.exists);
+          setSeat(response.data.seat_id);
+        })
+      }
+  }, []);
+
+  
   return(
     <div className="bg-[#E0E0E0] rounded-b-83px flex px-[270px] gap-12 flex-col py-12">
-        <p className="text-5xl font-bold text-center">Забронируй место</p>
+      {userOnEvent == true ? <p className="text-5xl font-bold text-center">Вы уже забронировали место</p> :
+       <p className="text-5xl font-bold text-center">Забронируй место</p>}
+        
         <div className="flex gap-8">
           <div className="h-[270px] min-w-[170px] flex flex-col shadow-normal rounded-xl justify-center items-center">
             <UserSVG w={100} h={100} fill={'#000'}></UserSVG>
             <p className="text-2xl font-bold">Лектор</p>
           </div>
           <div className="flex flex-wrap gap-x-[19px] gap-y-7">
-          {['1','3','5','7','2','4','6','8'].map(seatNum => (
-              <button key={seatNum} className={`${seat == seatNum ? 'btn-square-inactive': ''} ${!availability[seatNum] ? 'btn-square-unavailable' : 'btn-square'}`} 
-              onClick={() => setSeat(seatNum)}
-              disabled={!availability[seatNum]}>
-                {seatNum}
-              </button>
-            ))}
+          {userOnEvent == false ? 
+          <>
+            {['1','3','5','7','2','4','6','8'].map(seatNum => (
+                <button key={seatNum} className={`${seat == seatNum ? 'btn-square-inactive': ''}
+                  ${!availability[seatNum] ? 'btn-square-unavailable' : 'btn-square'}`} 
+                onClick={() => setSeat(seatNum)}
+                disabled={!availability[seatNum]}>
+                  {seatNum}
+                </button>
+              ))}
+              </>
+              :
+              <>
+              {['1','3','5','7','2','4','6','8'].map(seatNum => (
+                <button key={seatNum} className={`
+                  ${!availability[seatNum] ? 'btn-square-unavailable' : 'btn-square'}
+                  cursor-default
+                  ${seat == seatNum ? 'btn-square-inactived': ''}`} 
+                onClick={() => setSeat(seatNum)}
+                disabled>
+                  {seatNum}
+                </button>
+              ))}
+            </>
+          }
           </div>
         </div>
-      <button className={`${seat == '' ? 'btn-unavailable' : 'btn bg-primary'}` } disabled={seat == '' ? true : false} onClick={rent}>Забронировать</button>
+        {userOnEvent == false && <button className={`${seat == '' ? 'btn-unavailable' : 'btn bg-primary'}` } disabled={seat == '' ? true : false} onClick={rent}>Забронировать</button>}
     </div>
   )
 }
 
 export default function Event( {event, imagePath, userName} : EventProps ) {
-  function handleLogout() {
-    router.post(route('logout'));
-  }
+  
   return(
     <PageLayout>
-      
-
-      <button onClick={handleLogout}>Logout</button>
-      <div className="cardochka flex gap-14 flex-col container max-w-7xl mt-20 pt-5">
+        <div className="cardochka flex gap-14 flex-col container max-w-7xl mt-20 pt-5">
         <h2 className="text-center text-5xl text-primary font-bold">{event.name}</h2>
         <img className="rounded-2xl w-[740px] self-center" src={imagePath}></img>
         <div className="flex px-[270px] gap-8 flex-col">

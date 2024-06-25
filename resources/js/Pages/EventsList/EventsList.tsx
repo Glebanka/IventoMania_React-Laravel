@@ -3,18 +3,29 @@ import DateProvider from "@/Components/providers/DateProvider";
 import PageLayout from "@/Layouts/PageLayout";
 import { useContext } from "react";
 import DateContext from "@/Components/contexts/DateContext";
+import type { EventInterface } from "@/app";
 import Event from "./Event";
 
-export default function Events( { events } ){
+interface Events{
+  events: EventInterface[];
+}
+
+export default function Events( { events } : Events ){
   function EventsList(){
-    let { date } = useContext(DateContext);
+    const context = useContext(DateContext);
+
+    if (!context) {
+      return <div>Контекст даты не определен</div>;
+    }
+
+    let { date } = context;
     const month = date.getMonth() + 1;
-    date = date.getDate() + ' ' + month;
+    let formattedDate = date.getDate() + ' ' + month;
     return(<>
       {events.map(event => (
-        <>
-          {date == event.date && <Event event={event}></Event>}
-        </>
+        <div key={event.id}>
+          {formattedDate == event.date && <Event event={event} />}
+        </div>
       ))}
     </>
     )

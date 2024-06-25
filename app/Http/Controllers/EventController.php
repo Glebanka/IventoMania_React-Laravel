@@ -11,6 +11,21 @@ use Storage;
 
 class EventController extends Controller{
   
+  public function checkUserOnEvent(Request $request)
+  {
+    $exists = UsersOnEvents::where('user_id', $request->user_id)
+      ->where('event_id', $request->event_id)
+      ->exists();
+    $seat_id = UsersOnEvents::where('user_id', $request->user_id)
+    ->where('event_id', $request->event_id)
+    ->first()->seat_id;
+
+    return response()->json([
+      'exists' => $exists,
+      'seat_id' => $seat_id,
+    ]);
+  }
+
   public function checkSeatAvailability(Request $request)
   {
     $eventID = $request->input('id');
