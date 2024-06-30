@@ -21,12 +21,21 @@ export default function Events( { events } : Events ){
     let { date } = context;
     const month = date.getMonth() + 1;
     let formattedDate = date.getDate() + ' ' + month;
+
+    // Фильтрация событий, совпадающих с formattedDate
+    const eventsOnSelectedDate = events.filter(event => event.date === formattedDate);
+
     return(<>
-      {events.map(event => (
+      {eventsOnSelectedDate.length > 0 ? (
+        eventsOnSelectedDate.map(event => (
         <div key={event.id}>
           {formattedDate == event.date && <Event event={event} />}
         </div>
-      ))}
+      ))) : (
+        <div className="cardochka pb-[528px] pt-8">
+          <p className="text-4xl text-center font-bold">Нет событий на эту дату.</p>
+        </div>
+      )}
     </>
     )
   }

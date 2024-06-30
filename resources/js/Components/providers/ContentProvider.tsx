@@ -1,5 +1,5 @@
-import{ useState, ReactNode } from 'react';
-import ContentContext from '../contexts/ContentContext';
+import { useState, ReactNode } from 'react';
+import { ContentContext } from '../contexts/ContentContext';
 interface ContentProviderProps {
   children: ReactNode;
 }

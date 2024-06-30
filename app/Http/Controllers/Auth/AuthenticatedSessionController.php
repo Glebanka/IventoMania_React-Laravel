@@ -26,7 +26,7 @@ class AuthenticatedSessionController extends Controller
      * Handle login request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function login(Request $request)
     {
@@ -50,7 +50,7 @@ class AuthenticatedSessionController extends Controller
      * Handle logout request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function logout(Request $request)
     {

@@ -63,7 +63,8 @@ class EventController extends Controller{
       'event_id' => $request['event_id'],
       'user_id' => $request['user_id'],
     ]);
-    return redirect()->intended('/');
+
+    return response()->json('success');
   }
   // функция забора данных с базы данных для вывода на /event
   public function showEvent($id){

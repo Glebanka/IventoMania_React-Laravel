@@ -55,7 +55,7 @@ function Rent({event} : EventProps){
 
     axios.post(route('rentEvent'), formData)
       .then(response => {
-        console.log('Success:', response.data);
+        router.visit('/cabinet/user')
       })
       .catch(error => {
         console.error('Error:', error);

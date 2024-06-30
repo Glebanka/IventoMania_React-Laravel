@@ -15,6 +15,10 @@ export interface UserProps {
   id: number;
   fullname: string;
   user_type_id?: number;
+  age: number;
+  tel: number;
+  email: string;
+  seat_id: number;
 }
 
 export interface EventInterface {
@@ -27,6 +31,8 @@ export interface EventInterface {
   price: string;
   confirmed: boolean;
   lecturer_id: number;
+
+  users: UserProps[];
 
   // Названия переменных с бекенда
   seat_id: string;

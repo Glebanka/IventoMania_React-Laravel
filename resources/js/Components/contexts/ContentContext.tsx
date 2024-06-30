@@ -1,7 +1,16 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 export interface ContentContextProps {
-  content: object;
-  setContent(content: object): void;
+  content: string;
+  setContent(content: string): void;
 }
-export default createContext<ContentContextProps | undefined>(undefined);
+
+export const ContentContext = createContext<ContentContextProps | undefined>(undefined);
+
+export const useContent = () => {
+  const context = useContext(ContentContext);
+  if (!context) {
+    throw new Error('useContent must be used within a ContentProvider');
+  }
+  return context;
+};

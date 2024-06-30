@@ -4,7 +4,7 @@ import DateButtons from "@/Components/DateButtons";
 import DateProvider from "@/Components/providers/DateProvider";
 import CloseSVG from "@/Components/SVGs/CloseSVG";
 import PageLayout from "@/Layouts/PageLayout";
-import { useForm, usePage } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import axios from "axios";
 import { FormEventHandler, SetStateAction, useContext, useEffect, useState } from "react";
 import ImageInput from "./Components/ImageInput";
@@ -58,6 +58,7 @@ export default function CreateEvent(){
     event.preventDefault();
     setTime(time);
     setData('time', time);
+    setPopUpOpened(false);
   }
 
 
@@ -121,14 +122,15 @@ export default function CreateEvent(){
     } catch(error : any) {
       if (error.response && error.response.data && error.response.data.errors) {
         setErrors(error.response.data.errors);
-      } else {
         console.error('Ошибка при создании ивента или загрузке файла:', error);
+      } else {
+        router.visit('/cabinet/lecturer');
       }
     }
   };
 
   // отслеживание состояния открыт попап или нет
-  const [ popUpOpened, setPopUpOpened ] = useState<boolean>(Boolean);
+  const [ popUpOpened, setPopUpOpened ] = useState(Boolean);
   // Обработка нажатия на кнопки (спрятать и показать попап)
   const showPopUp = (event : React.MouseEvent<HTMLButtonElement>, popUpOpened : boolean) => {
     event.preventDefault();

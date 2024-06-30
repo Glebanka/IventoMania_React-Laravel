@@ -34,10 +34,11 @@ Route::middleware('auth')->group(function () {
 
   Route::get('/cabinet/user', [CabinetController::class, 'showUserCabinet']);
   Route::post('/cabinet/user/cancelRent', [CabinetController::class, 'cancelRent']);
-
+  
   Route::get('/cabinet/admin', [CabinetController::class, 'showAdminCabinet']);
-
+  
   Route::get('/cabinet/lecturer', [CabinetController::class, 'showLecturerCabinet']);
+  Route::post('/cabinet/lecturer/deleteEvent', [CabinetController::class, 'deleteEvent']);
 });
 
 

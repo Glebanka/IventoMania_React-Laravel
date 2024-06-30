@@ -80,11 +80,12 @@ export default function User({events} : {events: EventInterface[]}) {
                 </div>
 
               </div>
-              <button className="btn btn-primary flex gap-2 rounded-xl px-12 text-2xl w-fit" onClick={() => setpopUpOpened(true)}><CancelSVG w={25} />Отменить запись</button> 
+              <button className="btn flex gap-2 rounded-xl px-12 text-2xl w-fit" onClick={() => setpopUpOpened(true)}><CancelSVG w={25} />Отменить запись</button> 
 
               {/* Поп-ап, включается по кнопке выше */}
               {popUpOpened == true ? 
               <div className="w-full h-full fixed left-0 top-0 bg-slate-400 bg-opacity-30 z-10 ">
+               
                 <div className="fixed top-2/4 right-2/4 translate-x-1/2 -translate-y-1/2 bg-white w-600px h-fit rounded-3xl px-6 py-5 flex flex-col gap-9 ">
                   <button onClick={() => setpopUpOpened(false)} className="absolute right-6">
                     <CloseSVG />

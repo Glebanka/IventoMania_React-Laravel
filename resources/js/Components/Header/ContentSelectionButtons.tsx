@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import ContentContext from "../contexts/ContentContext";
+import { useContent } from "../contexts/ContentContext";
 
 export default function ContentSelectionButtons() {
-  const { content, setContent }  = useContext(ContentContext);
+  const { content, setContent }  = useContent();
 
   const handleContentButtonClick = (newContent : string) => {
     setContent(newContent);

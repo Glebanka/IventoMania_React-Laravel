@@ -1,12 +1,11 @@
-import ContentContext from "@/Components/contexts/ContentContext";
+import { useContent } from "@/Components/contexts/ContentContext";
 import LecturerContent from "@/Pages/Index/LecturerContent";
 import ListenerContent from "@/Pages/Index/ListenerContent";
 import ContentProvider from "@/Components/providers/ContentProvider";
 import PageLayout from "@/Layouts/PageLayout";
-import { useContext } from "react";
 
 function ContentComponent() {
-  const { content } = useContext(ContentContext);
+  const { content } = useContent();
 
   return (
     <div>

@@ -6,10 +6,8 @@ use App\Models\Event;
 use App\Models\User;
 use App\Models\UsersOnEvents;
 use DateTime;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -82,7 +80,57 @@ class CabinetController extends Controller
   ]);
   }
   function showLecturerCabinet(){
-    return Inertia::render('Cabinet/Lecturer');
+   // Получаем текущего пользователя
+   $lecturer = Auth::user();
+
+   // Получаем все события, где текущий пользователь является лектором
+   $events = Event::where('lecturer_id', $lecturer->id)->get();
+
+   // Для каждого события получаем список пользователей, зарегистрированных на это событие
+   $eventsWithParticipants = $events->map(function ($event) {
+       $participants = UsersOnEvents::where('event_id', $event->id)
+           ->join('users', 'users.id', '=', 'users_on_events.user_id')
+           ->get(['users.fullname as fullname', 'users.age as age', 'users.tel as tel' , 'users.email as email', 'users_on_events.seat_id']);
+
+           $months = [
+            'January' => 'января',
+            'February' => 'февраля',
+            'March' => 'марта',
+            'April' => 'апреля',
+            'May' => 'мая',
+            'June' => 'июня',
+            'July' => 'июля',
+            'August' => 'августа',
+            'September' => 'сентября',
+            'October' => 'октября',
+            'November' => 'ноября',
+            'December' => 'декабря'
+          ];
+    
+          $date = new DateTime($event -> datetime);
+    
+          // Форматирование даты в нужный формат
+          $formattedDate = $date->format('d F Y года');
+    
+          // Перевод названия месяца на русский
+          $month = $date->format('F');
+    
+          $formattedDate = str_replace($month, $months[$month], $formattedDate);
+    
+          // Форматирование времени в интервал
+          $formattedTime = $date->format('H:00') . '-' . $date->format('H:55');
+
+        $event->formattedDate = $formattedDate;
+        $event->formattedTime = $formattedTime;
+        $event->imagePath = Storage::url("public/events/{$event->id}.jpg");
+        $event->users = $participants;
+
+       return $event;
+   });
+
+   return Inertia::render('Cabinet/Lecturer', [
+       'events' => $eventsWithParticipants,
+   ]);
   }
   function cancelRent(Request $request){
     // Проверка наличия необходимых данных в запросе
@@ -104,5 +152,20 @@ class CabinetController extends Controller
     } else {
         return response()->json(['message' => 'Ошибка при отмене бронирования, запись не найдена'], 404);
     }
+  }
+  function deleteEvent(Request $request){
+    // Проверка наличия необходимых данных в запросе
+    $validatedData = $request->validate([
+      'event_id' => 'required|integer',
+    ]);
+
+    $result = UsersOnEvents::where([
+      'event_id' => $validatedData['event_id'],
+    ])->delete();
+    $result2 = Event::where([
+      'id' => $validatedData['event_id'],
+    ])->delete();
+      
+    return response()->json(['message' => 'Успешно удалено'], 200);
   }
 }
