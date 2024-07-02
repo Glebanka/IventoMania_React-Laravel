@@ -1,10 +1,9 @@
 import DateButtons from "@/Components/DateButtons";
 import DateProvider from "@/Components/providers/DateProvider";
 import PageLayout from "@/Layouts/PageLayout";
-import { useContext } from "react";
-import DateContext from "@/Components/contexts/DateContext";
 import type { EventInterface } from "@/app";
 import Event from "./Event";
+import { useDate } from "@/Components/contexts/DateContext";
 
 interface Events{
   events: EventInterface[];
@@ -12,13 +11,7 @@ interface Events{
 
 export default function Events( { events } : Events ){
   function EventsList(){
-    const context = useContext(DateContext);
-
-    if (!context) {
-      return <div>Контекст даты не определен</div>;
-    }
-
-    let { date } = context;
+    let { date } = useDate();
     const month = date.getMonth() + 1;
     let formattedDate = date.getDate() + ' ' + month;
 
@@ -49,7 +42,6 @@ export default function Events( { events } : Events ){
         <DateProvider>
           <DateButtons size='big' />
             <EventsList />
-          {/* {date !== event.date && <div>К сожалению, на этот день нет мероприятий.</div>} */}
           
         </DateProvider>
         </div>

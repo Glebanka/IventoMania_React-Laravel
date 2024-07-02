@@ -10,7 +10,7 @@ export const ContentContext = createContext<ContentContextProps | undefined>(und
 export const useContent = () => {
   const context = useContext(ContentContext);
   if (!context) {
-    throw new Error('useContent must be used within a ContentProvider');
+    return undefined;
   }
   return context;
 };

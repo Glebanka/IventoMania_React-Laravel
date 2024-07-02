@@ -1,5 +1,5 @@
 import{ useState, ReactNode } from 'react';
-import DateContext from '../contexts/DateContext';
+import { DateContext } from '../contexts/DateContext';
 interface DateProviderProps {
   children: ReactNode;
 }

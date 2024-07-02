@@ -128,7 +128,7 @@ class CabinetController extends Controller
        return $event;
    });
 
-   return Inertia::render('Cabinet/Lecturer', [
+   return Inertia::render('Cabinet/Lecturer/Lecturer', [
        'events' => $eventsWithParticipants,
    ]);
   }

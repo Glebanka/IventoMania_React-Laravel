@@ -47,7 +47,7 @@
     @apply rounded-lg bg-primary text-white font-bold w-26 text-xl text-center shadow-small-button duration-500 cursor-pointer;
   }
   .btn-small-unavailable{
-    @apply rounded-lg bg-gray-100 text-gray-300 font-bold w-26 text-xl text-center shadow-small duration-500 cursor-pointer;
+    @apply rounded-lg bg-gray-100 text-gray-300 font-bold w-26 text-xl text-center shadow-small duration-500;
   }
 
   .btn-square{
@@ -75,4 +75,37 @@
   select{
     @apply bg-left-40px;
   }
+
+  .popUpWrapper {
+    container-type: size;
+  }
+  .popUp {
+    width: 600px;
+
+    transform-origin: center right;
+	  scale: 0;
+	  opacity: 0;
+	  pointer-events: none;
+	  visibility: hidden;
+	  transition: scale 0.3s, opacity 0.2s, visibility 0.3s;
+  }
+  .popUp.active {
+    scale: 1;
+    opacity: 1;
+    pointer-events: all;
+    visibility: visible;
+}
+  
+
+  @container (max-height: 730px) {
+    .popUp {
+      overflow-y: scroll;
+      scrollbar-width: thin;
+      width: 610px;
+    }
+    .dateButtons{
+      width: 544px !important;
+    }
+  }
+
 }

@@ -75,7 +75,7 @@ class EventController extends Controller{
     $userName = $user->fullname;
 
     $imagePath = Storage::url("public/events/{$id}.jpg");
-    return Inertia::render('Event',[
+    return Inertia::render('Event/Event',[
       'event' => $event,
       'imagePath' => $imagePath,
       'userName' => $userName,
@@ -196,6 +196,8 @@ class EventController extends Controller{
         'date' => ['required', 'string'],
         'time' => ['required', 'string'],
         'file' => 'required|file|mimes:jpeg,png,jpg,gif|max:10240', // Максимум 10МБ
+      ], [
+        'file.max' => 'Размер файла не может быть более ' . (10240 / 1024) . ' Мегабайт.',
       ]);
 
         // Работа с датами

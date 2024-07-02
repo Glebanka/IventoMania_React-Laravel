@@ -1,8 +1,9 @@
 import { Link, usePage } from "@inertiajs/react";
 import CabinetButton from "../CabinetButton";
+import { UserProps } from "@/app";
 
 export default function AuthorizedHeaderButtons(){
-  const { props } = usePage();
+  const { props } = usePage<{ user: UserProps}>();
   const user = props.user;
   return (
       <div>

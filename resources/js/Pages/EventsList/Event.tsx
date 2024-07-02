@@ -1,14 +1,14 @@
-import { useContext } from "react";
-import DateContext from "../../Components/contexts/DateContext";
 import { Link } from "@inertiajs/react";
+import { useDate } from "@/Components/contexts/DateContext";
+import { EventInterface } from "@/app";
 
-export default function Event( {event} ){
-  let { date } = useContext(DateContext);
+export default function Event( {event} : {event : EventInterface} ){
+  const { date } = useDate();
   const month = date.getMonth() + 1;
-  date = date.getDate() + ' ' + month;
+  let formattedDate = date.getDate() + ' ' + month;
   return(
     <>
-    {date == event.date && <div className="flex xl:flex-row flex-col justify-between align-center cardochka">
+    {formattedDate == event.date && <div className="flex xl:flex-row flex-col justify-between align-center cardochka">
             
             {/* <img className="rounded-83px w-3/6 self-center" src={event.imagePath}></img> */}
             <div className="rounded-83px w-[600px] h-[600px] bg-cover bg-no-repeat bg-center self-center" style={{ backgroundImage: `url(${event.imagePath})` }}></div>

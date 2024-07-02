@@ -1,5 +1,5 @@
 import { useContext, useEffect} from "react";
-import DateContext from "./contexts/DateContext";
+import{ useDate } from "./contexts/DateContext";
 
 
 // создает пять значений {currentDate, dayOfWeek, day, month } и возращает массив
@@ -31,32 +31,34 @@ const generateNextFiveDays = () => {
     // создаем пять значений {currentDate, dayOfWeek, day, month } и отдаем их в новый массив dates 
     const dates = generateNextFiveDays();
 
-    const { date, setNewDate } = useContext(DateContext);
+    const { date, setNewDate } = useDate();
 
     // задаем новое значение контексту date
-    const handleDateButtonClick = (event : React.MouseEvent<HTMLButtonElement>, date : object) => {
+    const handleDateButtonClick = (event : React.MouseEvent<HTMLButtonElement>, date : Date) => {
       // запрещаем стандартное поведение кнопки (когда она находится в форме, она больше не будет отправлять её)
       event.preventDefault();
       setNewDate(date);
     };
 
-    useEffect(() => {
-      if (date) {
-        const formattedDate = date.toISOString().split('T')[0];
-        fetch(`/api/availability?date=${formattedDate}`)
-          .then(response => response.json())
-          .then(data => {
-            sendAvailability(data);
-          })
-          .catch(error => {
-            console.error('Error fetching availability:', error);
-          });
-      }
-    }, [date]);
+    if (sendAvailability !== undefined) {
+      useEffect(() => {
+        if (date) {
+          const formattedDate = date.toISOString().split('T')[0];
+          fetch(`/api/availability?date=${formattedDate}`)
+            .then(response => response.json())
+            .then(data => {
+              sendAvailability(data);
+            })
+            .catch(error => {
+              console.error('Error fetching availability:', error);
+            });
+        }
+      }, [date]);
+    }
   
     return (<>
       {size == 'small' ? (
-          <div className="flex  justify-between w-full">
+          <div className="flex justify-between w-full dateButtons">
             {dates.map((buttonDate, index) => (
           // каждый buttonDate хранит значения {currentDate, dayOfWeek, day, month } согласно массиву dates, то есть
           // currentDate + i дней (сколько будет итераций заполнения в массив dates, столько будет кнопок)

@@ -1,26 +1,17 @@
 import { UserProps } from "@/app";
-import DateContext, { DateContextProps } from "@/Components/contexts/DateContext";
 import DateButtons from "@/Components/DateButtons";
 import DateProvider from "@/Components/providers/DateProvider";
 import CloseSVG from "@/Components/SVGs/CloseSVG";
 import PageLayout from "@/Layouts/PageLayout";
 import { router, useForm, usePage } from "@inertiajs/react";
 import axios from "axios";
-import { FormEventHandler, SetStateAction, useContext, useEffect, useState } from "react";
+import { FormEventHandler, SetStateAction, useEffect, useState } from "react";
 import ImageInput from "./Components/ImageInput";
-
-interface Availability {
-  [key: string]: boolean;
-}
+import { useDate } from "@/Components/contexts/DateContext";
+import DatePopUp from "./Components/DatePopUp";
 
 function DateComponent({ sendDate } : {sendDate : Function}){
-  const context = useContext<DateContextProps | undefined>(DateContext);
-
-  if (!context) {
-    throw new Error("DateComponent must be used within a DateProvider");
-  }
-
-  let { date } = context;
+  const { date } = useDate();
   const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
   const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
@@ -44,22 +35,14 @@ function DateComponent({ sendDate } : {sendDate : Function}){
 
 export default function CreateEvent(){
   const [date, setDate] = useState<Date | null>(null);
+  // отслеживание состояния переменной time 
+  const [ time, setTime ] = useState<string>('');
 
   // Функция для обновления состояния на основании данных от дочернего компонента DateComponent
   const handleDataFromChild = (date : Date) => {
     setDate(date);
     setData('date', date.toString());
   };
-
-  // отслеживание состояния переменной time 
-  const [ time, setTime ] = useState<string>('');
-  // Обработка нажатия на кнопки (поменять значение time на новое)
-  const changeTime = (event : React.MouseEvent<HTMLButtonElement>, time : string) => {
-    event.preventDefault();
-    setTime(time);
-    setData('time', time);
-    setPopUpOpened(false);
-  }
 
 
   const { props } = usePage<{user: UserProps}>();
@@ -118,35 +101,43 @@ export default function CreateEvent(){
       await axios.post(route('uploadFile'), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-        }});
+        }})
+        .then(response => {
+          router.visit('/cabinet/lecturer');
+        })
+        .catch(error => {
+          console.error('Ошибка при загрузке файла:', error);
+        });;
+        
+
     } catch(error : any) {
-      if (error.response && error.response.data && error.response.data.errors) {
-        setErrors(error.response.data.errors);
-        console.error('Ошибка при создании ивента или загрузке файла:', error);
-      } else {
-        router.visit('/cabinet/lecturer');
-      }
-    }
+      setErrors(error.response.data.errors);
+      console.error('Ошибка:', error);
+    } 
   };
 
   // отслеживание состояния открыт попап или нет
   const [ popUpOpened, setPopUpOpened ] = useState(Boolean);
+  const [animationTrigger, setAnimationTrigger] = useState(false);
   // Обработка нажатия на кнопки (спрятать и показать попап)
   const showPopUp = (event : React.MouseEvent<HTMLButtonElement>, popUpOpened : boolean) => {
     event.preventDefault();
     setPopUpOpened(popUpOpened);
     }
 
-  const [availability, setAvailability] = useState<Availability>({});
+    // при открытии попапа убираем возможность прокручивать фон, то есть overflow ставим hidden
+    useEffect(() => {
+      if (popUpOpened) {
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+          setAnimationTrigger(true);
+      }, 10); // Задержка в 10 мс обычно достаточно
+      } else {
+        document.body.style.overflow = 'auto';
+        setAnimationTrigger(false);
+      }
+    }, [popUpOpened]);
 
-  // Функция для обновления состояния на основании данных от дочернего компонента DateButtons
-  const checkAvailability = (availability: SetStateAction<Availability>) => {
-    setAvailability(availability);
-  };
-
-  
-  
-  
   return(
     <PageLayout>
       <DateProvider>
@@ -251,73 +242,18 @@ export default function CreateEvent(){
           </button>
         </div>
           
-          
-        {/* Поп-ап, включается по кнопке выше */}
-        {popUpOpened == true ? 
-        <div className="w-full h-full fixed left-0 top-0 bg-slate-700 bg-opacity-55 z-10 ">
-          <div className="fixed top-2/4 right-2/4 translate-x-1/2 -translate-y-1/2 bg-white w-600px h-5/6 rounded-3xl px-6 py-5 flex flex-col gap-9 ">
-            <button onClick={(event) => showPopUp(event, false)} className="absolute right-6">
-              <CloseSVG />
-            </button>
-            <p className="text-center text-2xl font-bold">Выберите дату и время</p>
-            <div className="flex flex-col gap-5">
-              <p className="font-bold text-2xl">Июль</p>
-              <DateButtons sendAvailability={checkAvailability} size='small' />
-            </div>
-
-
-            <div className="flex flex-col gap-5">
-              <p className="font-bold text-2xl">Утро</p>
-              <div className="flex flex-wrap gap-2">
-                {['8', '9', '10'].map(timeSlot => (
-                  <button
-                    key={timeSlot}
-                    onClick={(event) => changeTime(event, timeSlot)}
-                    className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
-                    disabled={availability[timeSlot]}
-                  >
-                    {`${timeSlot}:00-${timeSlot}:50`}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-col gap-5">
-              <p className="font-bold text-2xl">День</p>
-              <div className="flex flex-wrap gap-2">
-                {['11', '12', '13', '14', '15'].map(timeSlot => (
-                  <button
-                    key={timeSlot}
-                    onClick={(event) => changeTime(event, timeSlot)}
-                    className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
-                    disabled={availability[timeSlot]}
-                  >
-                    {`${timeSlot}:00-${timeSlot}:50`}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-col gap-5">
-              <p className="font-bold text-2xl">Вечер</p>
-              <div className="flex flex-wrap gap-2">
-                {['16', '17', '18'].map(timeSlot => (
-                  <button
-                    key={timeSlot}
-                    onClick={(event) => changeTime(event, timeSlot)}
-                    className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
-                    disabled={availability[timeSlot]}
-                  >
-                    {`${timeSlot}:00-${timeSlot}:50`}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-         : null}
+        
+        {/* Поп-ап для выбора дат, включается по кнопке выше */}
+        {popUpOpened == true ? <DatePopUp showPopUp={showPopUp}
+        setData={setData}
+        setTime={setTime}
+        time={time} 
+        animationTrigger={animationTrigger}/> : null}
 
 
         <input type="submit" className="btn btn-primary w-fit text-3xl mt-5" value="Создать"></input>
+
+        {Object.keys(errors).length !== 0 && <strong className="text-red-400">Что-то пошло не так, перепроверьте форму</strong>}
 
       </form>
     </div>

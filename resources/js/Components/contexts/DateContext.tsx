@@ -1,7 +1,15 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 export interface DateContextProps {
   date: Date;
-  setNewDate(): void;
+  setNewDate(date : Date): void;
 }
-export default createContext<DateContextProps | undefined>(undefined);
+export const DateContext =  createContext<DateContextProps | undefined>(undefined);
+
+export const useDate = () => {
+  const context = useContext(DateContext);
+  if (!context) {
+    throw new Error('useDate must be used within a DateProvider');
+  }
+  return context;
+};

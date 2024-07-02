@@ -14,7 +14,7 @@ export interface SVGProps {
 export interface UserProps {
   id: number;
   fullname: string;
-  user_type_id?: number;
+  user_type_id: number;
   age: number;
   tel: number;
   email: string;
