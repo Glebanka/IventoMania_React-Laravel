@@ -19,7 +19,9 @@ export default function Lecturer( {events} : {events: EventInterface[]}){
   const [eventID, setEventID] = useState<number>();
   const [animationTrigger, setAnimationTrigger] = useState(false);
 
-
+  function handleChangeClick(eventID: number){
+    router.visit('/events/edit/' + eventID);
+  }
   function handleDeleteClick(eventID : number){
     setpopUpOpened(true);
     setEventID(eventID);
@@ -54,7 +56,9 @@ export default function Lecturer( {events} : {events: EventInterface[]}){
         {lecturerEvents.length > 0 ? (
           lecturerEvents.map(event => (
           <>
-            <Event event={event} handleDeleteClick={handleDeleteClick}></Event>
+            <Event event={event}
+            handleDeleteClick={handleDeleteClick}
+            handleChangeClick={handleChangeClick}></Event>
           </>
         ))) : (
           <div className="cardochka pb-[528px] pt-8">

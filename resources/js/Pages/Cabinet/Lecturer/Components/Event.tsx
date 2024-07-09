@@ -9,7 +9,8 @@ import TickWithClockSVG from "@/Components/SVGs/TickWithClockSVG";
 import TrashSVG from "@/Components/SVGs/TrashSVG";
 import { Link } from "@inertiajs/react";
 
-export default function Event( {event, handleDeleteClick} : {event: EventInterface, handleDeleteClick: Function}){
+export default function Event( {event, handleDeleteClick, handleChangeClick} :
+  {event: EventInterface, handleDeleteClick: Function, handleChangeClick : Function}){
   return(
     <div key={event.id} className="flex flex-col gap-16 align-center cardochka">
             <div className="flex xl:flex-row flex-col justify-between align-center">
@@ -17,7 +18,10 @@ export default function Event( {event, handleDeleteClick} : {event: EventInterfa
               
               <div className="border-radius w-3/6 flex flex-col sm:justify-between py-16 px-10 self-center xl:self-stretch">
                 
-                <Link href={`/event/${event.id}`} className="flex gap-2 4xl"><h3 className='text-primary text-4xl font-bold'>{event.name}</h3><ExternalLinkSVG w={32} /></Link>
+                <Link href={`/event/${event.id}`} className="flex gap-2 4xl">
+                  <h3 className='text-primary text-4xl font-bold w-[500px]'>{event.name}</h3>
+                  <ExternalLinkSVG w={44} />
+                </Link>
                 
                 
                 <p className="text-xl leading-tight mb-3 xl:mb-0 hyphens-auto">{event.short_description} </p>
@@ -53,7 +57,7 @@ export default function Event( {event, handleDeleteClick} : {event: EventInterfa
                 </div>
 
                 <div className="flex gap-4">
-                    <button className="btn flex gap-2 rounded-xl px-12 text-2xl"><PencilSVG w={25} />Изменить</button>
+                    <button className="btn flex gap-2 rounded-xl px-12 text-2xl" onClick={() => handleChangeClick(event.id)}><PencilSVG w={25} />Изменить</button>
                     <button className="btn rounded-xl flex gap-2 px-12 text-2xl" onClick={() => handleDeleteClick(event.id)}><TrashSVG w={35} />Удалить</button>
                 </div>
               </div>

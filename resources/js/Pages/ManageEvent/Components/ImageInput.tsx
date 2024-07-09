@@ -1,11 +1,18 @@
 import UploadSVG from "@/Components/SVGs/UploadSVG";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function ImageInput({setData} : {setData : Function}){
+export default function ImageInput({initialImagePath, setData} : {initialImagePath : string | undefined, setData : Function}){
   // Состояние для превью изображения
   const [preview, setPreview] = useState<string | undefined>(undefined);
   // Состояние для ошибки
   const [error, setError] = useState<string | undefined>(undefined); 
+
+  useEffect(() => {
+    // Если initialImagePath предоставлен и preview не установлено
+    if (!!initialImagePath) {
+      setPreview(initialImagePath);
+    }
+  }, [initialImagePath]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -17,7 +24,8 @@ export default function ImageInput({setData} : {setData : Function}){
         setPreview(undefined); // Очистить предыдущее превью, если оно есть
         return;
       }
-      setData('file', file);
+
+      setData('file', file); // Заполняем поле file в Inertia
       setError(undefined); // Очистка сообщений об ошибках, если файл подходит
 
       // Создание превью
@@ -28,6 +36,7 @@ export default function ImageInput({setData} : {setData : Function}){
           setPreview(reader.result);
         }
       };
+
       reader.readAsDataURL(file);
     } else {
       setError("Файл не выбран.");

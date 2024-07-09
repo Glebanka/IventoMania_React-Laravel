@@ -8,13 +8,13 @@ function ContentComponent() {
   const { content } = useContent();
 
   return (
-    <div>
+    <>
       {/* Если выбран контент для слушателя, то выводим ListenerContent */}
       {content === 'listener' && <ListenerContent />}
 
       {/* Если выбран контент для лектора, то выводим LecturerContent */}
       {content === 'lecturer' && <LecturerContent /> }
-    </div>
+    </>
   );
 }
 

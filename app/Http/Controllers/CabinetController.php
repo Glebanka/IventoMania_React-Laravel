@@ -75,7 +75,7 @@ class CabinetController extends Controller
       return $event;
     });
 
-    return Inertia::render('Cabinet/User', [
+    return Inertia::render('Cabinet/User/User', [
       'events' => $eventsWithSeats,
   ]);
   }

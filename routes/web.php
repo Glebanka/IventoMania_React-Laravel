@@ -25,13 +25,8 @@ Route::get('/event/{id}', [EventController::class, 'showEvent'])->name('event');
 Route::get('/events', [EventController::class, 'showEvents'])->name('events');
 
 Route::middleware('auth')->group(function () {
-  Route::get('/events/create', function () {
-      return Inertia::render('CreateEvent/CreateEvent');
-  });
-  Route::post('/events/create', [EventController::class, 'newEvent'])->name('createEvent');
-  Route::post('/events/imgUpload', [EventController::class, 'fileUpload'])->name('uploadFile');
   Route::post('/events/rentEvent', [EventController::class, 'rentEvent'])->name('rentEvent');
-
+  
   Route::get('/cabinet/user', [CabinetController::class, 'showUserCabinet']);
   Route::post('/cabinet/user/cancelRent', [CabinetController::class, 'cancelRent']);
   
@@ -39,6 +34,18 @@ Route::middleware('auth')->group(function () {
   
   Route::get('/cabinet/lecturer', [CabinetController::class, 'showLecturerCabinet']);
   Route::post('/cabinet/lecturer/deleteEvent', [CabinetController::class, 'deleteEvent']);
+  
+  Route::get('/events/edit/{id}', [EventController::class, 'showEditForm']);
+  
+  Route::put('/events/edit', [EventController::class, 'editEvent']);
+  
+  Route::get('/events/create', function () {
+    return Inertia::render('ManageEvent/ManageEvent', [
+      'initialData' => null
+    ]);
+  });
+  Route::post('/events/create', [EventController::class, 'newEvent'])->name('createEvent');
+  Route::post('/events/imgUpload', [EventController::class, 'fileUpload'])->name('uploadFile');
 });
 
 

@@ -8,33 +8,21 @@ import CalendarSVG from "@/Components/SVGs/CalendarSVG";
 import CancelSVG from "@/Components/SVGs/CancelSVG";
 import ExternalLinkSVG from "@/Components/SVGs/ExternalLinkSVG";
 import { useState } from "react";
-import CloseSVG from "@/Components/SVGs/CloseSVG";
-import axios from "axios";
+import CancelPopUp from "./Components/CancelPopUp";
 
 export default function User({events} : {events: EventInterface[]}) {
   let [popUpOpened, setpopUpOpened] = useState(Boolean);
 
-  const { props } = usePage<{user: UserProps}>();
-  const user = props.user;
-
-  function cancelRent(seat_id: string, event_id: number){
-    setpopUpOpened(false);
-    const formData = new FormData();
-    formData.append('event_id', event_id.toString());
-    formData.append('seat_id', seat_id.toString());
-    formData.append('user_id', user.id.toString());
-    axios.post('/cabinet/user/cancelRent', formData)
-    .then(response => {
-      router.reload({ only: ['events'] });
-    })
-    .catch(error => {
-      console.error('Ошибка отмены брони:', error);
-    });
-  }
-
-
   function handleLogout() {
     router.post(route('logout'));
+  }
+  const [eventID, setEventID] = useState<number>();
+  const [seatID, setSeatID] = useState<number>();
+
+  function handleCancelClick(eventID: number, seatID: number) {
+    setpopUpOpened(true);
+    setEventID(eventID);
+    setSeatID(seatID);
   }
   
   return(
@@ -52,7 +40,10 @@ export default function User({events} : {events: EventInterface[]}) {
             
             <div className="border-radius w-3/6 flex flex-col sm:justify-between py-16 px-10 self-center xl:self-stretch">
               
-              <Link href={`/event/${event.id}`} className="flex gap-2 4xl"><h3 className='text-primary text-4xl font-bold'>{event.name}</h3><ExternalLinkSVG w={32} /></Link>
+              <Link href={`/event/${event.id}`} className="flex justify-between 4xl">
+                <h3 className='text-primary text-4xl font-bold w-[500px]'>{event.name}</h3>
+                <ExternalLinkSVG w={44} />
+              </Link>
               
               
               <p className="text-xl leading-tight mb-3 xl:mb-0 hyphens-auto">{event.short_description} </p>
@@ -80,30 +71,18 @@ export default function User({events} : {events: EventInterface[]}) {
                 </div>
 
               </div>
-              <button className="btn flex gap-2 rounded-xl px-12 text-2xl w-fit" onClick={() => setpopUpOpened(true)}><CancelSVG w={25} />Отменить запись</button> 
-
-              {/* Поп-ап, включается по кнопке выше */}
-              {popUpOpened == true ? 
-              <div className="w-full h-full fixed left-0 top-0 bg-slate-400 bg-opacity-30 z-10 ">
-               
-                <div className="fixed top-2/4 right-2/4 translate-x-1/2 -translate-y-1/2 bg-white w-600px h-fit rounded-3xl px-6 py-5 flex flex-col gap-9 ">
-                  <button onClick={() => setpopUpOpened(false)} className="absolute right-6">
-                    <CloseSVG />
-                  </button>
-                  <p className="text-2xl">
-                    Вы уверены, что хотите отменить бронь на этот мастер-класс?
-                  </p>
-                  <button onClick={() => cancelRent(event.seat_id, event.id)} className="btn text-2xl">
-                    Да, я уверен
-                  </button>
-                </div>
-              </div>: null}
-
+              <button className="btn flex gap-2 rounded-xl px-12 text-2xl w-fit" onClick={() => handleCancelClick(event.id, event.seat_id)}><CancelSVG w={25} />Отменить запись</button> 
             </div>
-            
           </div>
         </>
       ))}
+      {/* Поп-ап, включается по кнопке выше */}
+      {popUpOpened == true && eventID !== undefined && seatID !== undefined && 
+          <CancelPopUp
+          setpopUpOpened={setpopUpOpened}
+          seatID={seatID} 
+          eventID={eventID}
+          />}
       
     </div>
   </PageLayout>

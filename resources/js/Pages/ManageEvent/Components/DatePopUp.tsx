@@ -1,10 +1,13 @@
+import { useDate } from "@/Components/contexts/DateContext";
 import DateButtons from "@/Components/DateButtons";
 import CloseSVG from "@/Components/SVGs/CloseSVG";
 import { SetStateAction, useState } from "react";
 
 export default function DatePopUp( {showPopUp, setData, setTime, time, animationTrigger} : 
   {showPopUp: Function, setData: Function, setTime: Function, time: string, animationTrigger : Boolean} ){
-  
+
+  const { date } = useDate();
+
   interface Availability {
     [key: string]: boolean;
   }  
@@ -15,10 +18,11 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
   };
 
   // Обработка нажатия на кнопки (поменять значение time на новое)
-  const changeTime = (event : React.MouseEvent<HTMLButtonElement>, time : string) => {
+  const changeDateTime = (event : React.MouseEvent<HTMLButtonElement>, time : string) => {
     event.preventDefault();
     setTime(time);
     setData('time', time);
+    setData('date', date.toString());
     showPopUp(event, false);
   }
 
@@ -43,7 +47,7 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
               {['8', '9', '10'].map(timeSlot => (
                 <button
                   key={timeSlot}
-                  onClick={(event) => changeTime(event, timeSlot)}
+                  onClick={(event) => changeDateTime(event, timeSlot)}
                   className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
                   disabled={availability[timeSlot]}
                 >
@@ -58,7 +62,7 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
               {['11', '12', '13', '14', '15'].map(timeSlot => (
                 <button
                   key={timeSlot}
-                  onClick={(event) => changeTime(event, timeSlot)}
+                  onClick={(event) => changeDateTime(event, timeSlot)}
                   className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
                   disabled={availability[timeSlot]}
                 >
@@ -73,7 +77,7 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
               {['16', '17', '18'].map(timeSlot => (
                 <button
                   key={timeSlot}
-                  onClick={(event) => changeTime(event, timeSlot)}
+                  onClick={(event) => changeDateTime(event, timeSlot)}
                   className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
                   disabled={availability[timeSlot]}
                 >

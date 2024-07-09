@@ -12,7 +12,7 @@ export default function Header(){
 
   return(
 
-    <header className="container flex flex-wrap mt-3 items-center justify-between max-w-7xl">
+    <header className="container flex sm:flex-col lg:flex-row gap-8 sm:flex-wrap mt-3 items-center justify-between max-w-7xl">
       <Link href="/">
         <Logo />
       </Link>

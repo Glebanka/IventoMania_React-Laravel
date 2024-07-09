@@ -2,16 +2,15 @@ import { UserProps } from "@/app";
 import { router, usePage } from "@inertiajs/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import UserSVG from "@/Components/SVGs/UserSVG";
 import { EventProps } from "../Event";
 import UserOnEventForm from "./UserOnEventForm";
 import StandartForm from "./StandartForm";
 import LecturerForm from "./LecturerForm";
+export interface Availability {
+  [key: string]: boolean;
+}
 
 export default function RentForm({event} : EventProps){
-  interface Availability {
-    [key: string]: boolean;
-  }
   const [availability, setAvailability] = useState<Availability>({});
 
   useEffect(() => {
@@ -75,13 +74,24 @@ export default function RentForm({event} : EventProps){
   return(
     <div className="bg-[#E0E0E0] rounded-b-83px flex px-[270px] gap-12 flex-col py-12">
       {/* Выводит форму для записи на мастер-класс если человек не лектор и он уже не записан или если пользователь не зарегистрирован */}
-      {userOnEvent == false && user.user_type_id !== 2 && <StandartForm availability={availability} seat={seat} setSeat={setSeat} rent={rent} />}
+      {user !== 'undefined' && userOnEvent == false && user.user_type_id !== 2 && (
+        <StandartForm availability={availability} seat={seat} setSeat={setSeat} rent={rent} />
+      )}
+
+      {/* Выводим стандартную форму, если пользователь не зарегистрирован */}
+      {user === 'undefined' && (
+        <StandartForm availability={availability} seat={seat} setSeat={setSeat} rent={rent} />
+      )}
 
       {/* Выводит информацию о том что человек записан если он не лектор и уже записан */}
-      {userOnEvent == true && user.user_type_id !== 2 && <UserOnEventForm availability={availability} seat={seat} /> }
-
-      {/* Выводит информацию о том что человек записан если он не лектор и уже записан */}
-      {user.user_type_id == 2 && <LecturerForm availability={availability} />}
+      {user !== 'undefined' && userOnEvent === true && user.user_type_id !== 2 && (
+        <UserOnEventForm availability={availability} seat={seat} />
+      )}
+  
+      {/* Если авторизированный пользователь лектор, то выводится просто виджет свободных и занятых мест */}
+      {user !== 'undefined' && user.user_type_id === 2 && (
+        <LecturerForm availability={availability} />
+      )}
     </div>
   )
 }

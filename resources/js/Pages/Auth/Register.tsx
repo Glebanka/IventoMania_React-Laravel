@@ -13,7 +13,7 @@ export default function Register(){
     role: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     setData(e.target.name, e.target.value);
   };
 

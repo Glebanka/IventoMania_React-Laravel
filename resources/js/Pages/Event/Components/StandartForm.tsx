@@ -1,6 +1,8 @@
 import UserSVG from "@/Components/SVGs/UserSVG";
+import { Availability } from "./RentForm";
 
-export default function StandartForm({ availability, seat, setSeat, rent }){
+export default function StandartForm({ availability, seat, setSeat, rent } : 
+  {availability : Availability, seat : string, setSeat : Function, rent : Function}){
   return(
     <>
     <p className="text-5xl font-bold text-center">Забронируй место</p>   
@@ -22,7 +24,7 @@ export default function StandartForm({ availability, seat, setSeat, rent }){
       </div>
       <button className={`${seat == '' ? 'btn-unavailable' : 'btn bg-primary'}` } 
       disabled={seat == '' ? true : false} 
-      onClick={rent}>Забронировать</button>
+      onClick={() => rent()}>Забронировать</button>
     </>
   )
 }

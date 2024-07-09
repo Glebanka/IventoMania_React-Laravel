@@ -1,6 +1,6 @@
 import PageLayout from "@/Layouts/PageLayout";
 import { Link, useForm } from "@inertiajs/react";
-import { FormEventHandler, useEffect } from "react";
+import { ChangeEvent, FormEventHandler, useEffect } from "react";
 
 export default function Login(){
 
@@ -9,7 +9,7 @@ export default function Login(){
     password: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e : any) => {
     setData(e.target.name, e.target.value);
   };
 

@@ -242,7 +242,7 @@ class EventController extends Controller{
         //   'file' => $file,
         // ]);
     }
-    protected function create(array $data)
+  protected function create(array $data)
     {
       return Event::create([
           'name' => $data['name'],
@@ -256,7 +256,7 @@ class EventController extends Controller{
       ]);
     }
 
-    public function fileUpload(Request $request)
+  public function fileUpload(Request $request)
     {
       // dd($request);
         // Валидация файла и event_id
@@ -275,10 +275,21 @@ class EventController extends Controller{
         $fileName = $eventId . '.' . $file->getClientOriginalExtension();
 
         // Сохраняем файл в локальном хранилище (в папку public/events)
-        $filePath = $file->storeAs('public/events', $fileName);
-
+        $file->storeAs('public/events', $fileName);
 
         // Возвращаем путь сохраненного файла или другую необходимую информацию
         return redirect(route('events'));
     }
+    
+  public function showEditForm($id){
+    $event = Event::findOrFail($id);
+    $event->imagePath = Storage::url("public/events/{$event->id}.jpg");
+
+    return Inertia::render('ManageEvent/ManageEvent',[
+      'initialData' => $event
+    ]);
+  }
+  public function editEvent(){
+
+  }
 }

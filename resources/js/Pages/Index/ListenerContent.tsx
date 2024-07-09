@@ -3,17 +3,16 @@ import { Link } from "@inertiajs/react";
 export default function ListenerContent(){
 
   return(
-    <div>
-       <div className="flex flex-col gap-20 mt-20 items-center">
+       <div className="flex flex-col gap-20 mt-10 sm:mt-20 items-center px-4">
         <div className="flex-col flex container gap-10 max-w-7xl">
-          <h2 className="text-center text-5xl"><strong>Не просто</strong> мастер-класс</h2>
-          <div className="flex xl:flex-row flex-col justify-between align-center">
-            <img className="cardochka w-47.7 self-center" src="/assets/OIG2 1(1).png"></img>
-            <div className="cardochka w-47.7 flex-col flex sm:justify-between py-8 px-10 self-center xl:self-stretch items-center ">
+          <h2 className="text-center text-xl sm:text-5xl"><strong>Не просто</strong> мастер-класс</h2>
+          <div className="flex sm:flex-row flex-col justify-between align-center">
+            <img className="cardochka  sm:w-47.7 self-center" src="/assets/OIG2 1(1).png"></img>
+            <div className="cardochka sm:w-47.7 flex-col flex sm:justify-between py-8 px-10 self-center xl:self-stretch items-center ">
 
-              <p className="text-40px mb-3 xl:mb-0 text-center leading-tight"><strong>ИвентоМания</strong> — праздник творчества, где вы можете раскрыть свой потенциал и <strong>вдохновиться</strong> на создание чего-то <strong>уникального</strong>.</p>
+              <p className="text-lg sm:text-2xl xl:text-[40px] mb-3 xl:mb-0 text-center leading-tight xl:leading-tight"><strong>ИвентоМания</strong> — праздник творчества, где вы можете раскрыть свой потенциал и <strong>вдохновиться</strong> на создание чего-то <strong>уникального</strong>.</p>
 
-              <Link href="/events" className="btn w-fit-content">Выбрать<br/>Мастер-класс</Link>
+              <Link href="/events" className="btn w-fit text-xl sm:text-3xl">Выбрать<br/>Мастер-класс</Link>
             </div>
           </div>
         </div>
@@ -51,6 +50,5 @@ export default function ListenerContent(){
 
         <Link href="/events" className="btn w-fit-content">Выбрать<br/>Мастер-класс</Link>
         </div>
-    </div>
   )
 }

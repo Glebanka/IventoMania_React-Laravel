@@ -35,7 +35,7 @@ export interface EventInterface {
   users: UserProps[];
 
   // Названия переменных с бекенда
-  seat_id: string;
+  seat_id: number;
   date: string;
   imagePath: string;
   formattedDate: string;
