@@ -13,7 +13,7 @@
 
 ### How it works?
 
-Inertia.js помогает использовать React и Laravel на одном и том же сервере. Бекенд часть полностью написана мною на Laravel.
+<a href="https://inertiajs.com/">Inertia.js</a> помогает использовать React и Laravel на одном и том же сервере. Бекенд часть полностью написана мною на Laravel.
 
 ### What was used?
 
@@ -22,6 +22,7 @@ TailwindCSS for styles <br/>
 Axios library for HTTP-queries <br/>
 Laravel for backend <br/>
 Inertia.js for Laravel and React Monolith <br/>
+Typescript was used <br/>
 
 ### My comments on this
 
