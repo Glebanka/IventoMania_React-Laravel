@@ -186,7 +186,7 @@ class EventController extends Controller{
   // функция записи данных в базу данных
   public function newEvent(Request $request)
     {
-      // dd($request);
+      dd($request);
       $request->validate([
         'name' => ['required', 'string'],
         'short_description' => ['required', 'string'],
@@ -205,7 +205,6 @@ class EventController extends Controller{
         $hour = $request['time'];
         $datetime = ['datetime' => $date . ' ' . $hour . ':00:00'];
         $request->merge($datetime);
-
 
         // Поиск свободной зоны
         // Получаем все place_id
@@ -228,7 +227,6 @@ class EventController extends Controller{
           return response()->json(['error' => 'Нет доступных зон для выбора под эту дату и время'], 422);
         }
         $request->merge($availablePlaceId);
-
 
         // Вызов функции создания ивента с передачей всех значений в $request
         $event = $this->create($request->all());
@@ -285,11 +283,55 @@ class EventController extends Controller{
     $event = Event::findOrFail($id);
     $event->imagePath = Storage::url("public/events/{$event->id}.jpg");
 
+    // Форматирование времени
+    $date = new DateTime($event -> datetime);
+    $event->time = $date->format('H');
+    // Удаляем ведущий ноль, если он есть
+    $event->time = ltrim($event->time, '0');
+
     return Inertia::render('ManageEvent/ManageEvent',[
       'initialData' => $event
     ]);
   }
-  public function editEvent(){
+  public function editEvent(Request $request){    
+    $event = Event::find($request->event_id);
 
+    // Работа с датами
+    $date = $request['date'];
+    $hour = $request['time'];
+    $datetime = ['datetime' => $date . ' ' . $hour . ':00:00'];
+    $request->merge($datetime);
+
+    $file = $request->file('file');
+
+
+    $changedData = [];
+    // Получаем все входящие данные запроса
+    $inputData = $request->all();
+
+    
+    foreach ($inputData as $key => $value) {
+        // Сравниваем текущие значения модели с входящими данными
+        if ($event->$key != $value) {
+            $changedData[$key] = $value;
+        }
+    }
+
+    if (!empty($changedData)) {
+      $event->update($changedData);
+
+      if(!empty($file)){
+        // Генерируем уникальное имя файла с привязкой к ID ивента
+        $fileName = $request->event_id . '.' . $file->getClientOriginalExtension();
+        
+        // Сохраняем файл в локальном хранилище (в папку public/events)
+        $file->storeAs('public/events', $fileName);
+
+      }
+
+      return response()->json('Success', 201);
+    }
+    
+    return response()->json('Ошибка', 403);
   }
 }

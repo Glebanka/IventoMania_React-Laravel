@@ -1,7 +1,7 @@
 import { useDate } from "@/Components/contexts/DateContext";
 
 // Вызывается только после выбора даты и времени в попапе
-export default function DateComponent( {time}: {time: string} ){
+export default function DateComponent( {time}: {time: number} ){
   // от сюда забираем контекст времени который мы уже задали в datepopup
   const { date } = useDate();
   const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
@@ -14,7 +14,7 @@ export default function DateComponent( {time}: {time: string} ){
   return (
     <>
       {/* Если time выбрано, то выводит информацию о времени и дате прямо в кнопку */}
-      {time !== '' ? (
+      {time !== 0 ? (
         <div className="flex flex-col text-lg items-center font-bold">
           <p>{day + ' ' + month + ', ' + dayOfWeek}</p>
           <p>{time}:00-{time}:50</p>

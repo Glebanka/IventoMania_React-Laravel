@@ -1,5 +1,6 @@
 import Footer from "@/Components/Footer";
 import Header from "@/Components/Header/Header";
+import DateProvider from "@/Components/providers/DateProvider";
 import { Head } from "@inertiajs/react";
 
 export default function Page( {children} : { children : React.ReactNode } ){

@@ -32,18 +32,18 @@ Route::middleware('auth')->group(function () {
   
   Route::get('/cabinet/admin', [CabinetController::class, 'showAdminCabinet']);
   
-  Route::get('/cabinet/lecturer', [CabinetController::class, 'showLecturerCabinet']);
+  Route::get('/cabinet/lecturer', [CabinetController::class, 'showLecturerCabinet'])->name('lecturer');
   Route::post('/cabinet/lecturer/deleteEvent', [CabinetController::class, 'deleteEvent']);
   
   Route::get('/events/edit/{id}', [EventController::class, 'showEditForm']);
   
-  Route::put('/events/edit', [EventController::class, 'editEvent']);
+  Route::post('/events/edit', [EventController::class, 'editEvent'])->name('editEvent');
   
   Route::get('/events/create', function () {
     return Inertia::render('ManageEvent/ManageEvent', [
       'initialData' => null
-    ]);
-  });
+    ]);});
+
   Route::post('/events/create', [EventController::class, 'newEvent'])->name('createEvent');
   Route::post('/events/imgUpload', [EventController::class, 'fileUpload'])->name('uploadFile');
 });

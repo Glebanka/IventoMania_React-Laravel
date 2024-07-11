@@ -31,11 +31,12 @@ export interface EventInterface {
   price: string;
   confirmed: boolean;
   lecturer_id: number;
-
+  
   users: UserProps[];
-
+  
   // Названия переменных с бекенда
   seat_id: number;
+  time: number;
   date: string;
   imagePath: string;
   formattedDate: string;

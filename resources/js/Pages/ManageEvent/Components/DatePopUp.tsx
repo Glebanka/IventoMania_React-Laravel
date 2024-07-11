@@ -4,9 +4,7 @@ import CloseSVG from "@/Components/SVGs/CloseSVG";
 import { SetStateAction, useState } from "react";
 
 export default function DatePopUp( {showPopUp, setData, setTime, time, animationTrigger} : 
-  {showPopUp: Function, setData: Function, setTime: Function, time: string, animationTrigger : Boolean} ){
-
-  const { date } = useDate();
+  {showPopUp: Function, setData: Function, setTime: Function, time: number, animationTrigger : Boolean} ){
 
   interface Availability {
     [key: string]: boolean;
@@ -18,15 +16,14 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
   };
 
   // Обработка нажатия на кнопки (поменять значение time на новое)
-  const changeDateTime = (event : React.MouseEvent<HTMLButtonElement>, time : string) => {
+  const changeDateTime = (event : React.MouseEvent<HTMLButtonElement>, time : number) => {
     event.preventDefault();
     setTime(time);
-    setData('time', time);
-    setData('date', date.toString());
+    
+    setData('timeNum', time);
     showPopUp(event, false);
   }
 
-  // 
   return (
     <div className="w-full h-full fixed left-0 top-0 bg-slate-700 bg-opacity-55 z-10">
       <div className="popUpWrapper fixed -translate-y-1/2 top-2/4 h-5/6 w-full">
@@ -44,7 +41,7 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
           <div className="flex flex-col gap-5">
             <p className="font-bold text-2xl">Утро</p>
             <div className="flex flex-wrap gap-2">
-              {['8', '9', '10'].map(timeSlot => (
+              {[8, 9, 10].map(timeSlot => (
                 <button
                   key={timeSlot}
                   onClick={(event) => changeDateTime(event, timeSlot)}
@@ -59,7 +56,7 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
           <div className="flex flex-col gap-5">
             <p className="font-bold text-2xl">День</p>
             <div className="flex flex-wrap gap-2">
-              {['11', '12', '13', '14', '15'].map(timeSlot => (
+              {[11, 12, 13, 14, 15].map(timeSlot => (
                 <button
                   key={timeSlot}
                   onClick={(event) => changeDateTime(event, timeSlot)}
@@ -74,7 +71,7 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
           <div className="flex flex-col gap-5">
             <p className="font-bold text-2xl">Вечер</p>
             <div className="flex flex-wrap gap-2">
-              {['16', '17', '18'].map(timeSlot => (
+              {[16, 17, 18].map(timeSlot => (
                 <button
                   key={timeSlot}
                   onClick={(event) => changeDateTime(event, timeSlot)}
