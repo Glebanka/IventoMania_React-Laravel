@@ -1,8 +1,16 @@
 import UserSVG from "@/Components/SVGs/UserSVG";
 import { Availability } from "./RentForm";
+import { rent } from "../Scripts/api";
+import { EventInterface, UserProps } from "@/app";
+import { usePage } from "@inertiajs/react";
 
-export default function StandartForm({ availability, seat, setSeat, rent } : 
-  {availability : Availability, seat : string, setSeat : Function, rent : Function}){
+export default function StandartForm({ availability, seat, setSeat, event } : 
+  {availability : Availability, seat : string, setSeat : Function , event : EventInterface}){
+    
+  // проверяем что за пользователь сейчас зарегистрирован
+  const { props } = usePage<{ user: UserProps | 'undefined' }>();
+  const user = props.user;
+
   return(
     <>
     <p className="text-5xl font-bold text-center">Забронируй место</p>   
@@ -24,7 +32,7 @@ export default function StandartForm({ availability, seat, setSeat, rent } :
       </div>
       <button className={`${seat == '' ? 'btn-unavailable' : 'btn bg-primary'}` } 
       disabled={seat == '' ? true : false} 
-      onClick={() => rent()}>Забронировать</button>
+      onClick={() => rent(seat, event, user)}>Забронировать</button>
     </>
   )
 }

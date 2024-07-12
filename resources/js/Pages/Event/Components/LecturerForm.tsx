@@ -11,13 +11,13 @@ export default function LecturerForm({ availability } : {availability : Availabi
         </div>
         <div className="flex flex-wrap gap-x-[19px] gap-y-7">
         {['1','3','5','7','2','4','6','8'].map(seatNum => (
-                <button key={seatNum} className={`
-                  ${!availability[seatNum] ? 'btn-square-unavailable' : 'btn-square'}
-                  cursor-default`} 
-                  disabled>
+          <button key={seatNum} className={`
+            ${!availability[seatNum] ? 'btn-square-unavailable' : 'btn-square'}
+            cursor-default`} 
+            disabled>
 
-                  {seatNum}
-                </button>
+            {seatNum}
+          </button>
         ))}
         </div>
       </div>

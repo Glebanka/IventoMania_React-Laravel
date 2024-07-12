@@ -1,9 +1,9 @@
-import DateButtons from "@/Components/DateButtons";
 import DateProvider from "@/Components/providers/DateProvider";
 import PageLayout from "@/Layouts/PageLayout";
 import type { EventInterface } from "@/app";
 import Event from "./Event";
 import { useDate } from "@/Components/contexts/DateContext";
+import DateButtons from "@/Components/DateButtons/DateButtons";
 
 interface Events{
   events: EventInterface[];

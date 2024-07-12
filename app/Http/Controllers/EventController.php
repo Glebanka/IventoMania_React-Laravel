@@ -186,7 +186,7 @@ class EventController extends Controller{
   // функция записи данных в базу данных
   public function newEvent(Request $request)
     {
-      dd($request);
+      // dd($request);
       $request->validate([
         'name' => ['required', 'string'],
         'short_description' => ['required', 'string'],
@@ -304,12 +304,10 @@ class EventController extends Controller{
 
     $file = $request->file('file');
 
-
     $changedData = [];
     // Получаем все входящие данные запроса
     $inputData = $request->all();
 
-    
     foreach ($inputData as $key => $value) {
         // Сравниваем текущие значения модели с входящими данными
         if ($event->$key != $value) {
@@ -326,12 +324,11 @@ class EventController extends Controller{
         
         // Сохраняем файл в локальном хранилище (в папку public/events)
         $file->storeAs('public/events', $fileName);
-
       }
 
       return response()->json('Success', 201);
     }
     
-    return response()->json('Ошибка', 403);
+    return response()->json('Error', 403);
   }
 }

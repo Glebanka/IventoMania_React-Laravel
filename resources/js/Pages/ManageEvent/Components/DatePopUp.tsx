@@ -1,7 +1,6 @@
-import { useDate } from "@/Components/contexts/DateContext";
-import DateButtons from "@/Components/DateButtons";
+import DateButtons from "@/Components/DateButtons/DateButtons";
 import CloseSVG from "@/Components/SVGs/CloseSVG";
-import { SetStateAction, useState } from "react";
+import {useState } from "react";
 
 export default function DatePopUp( {showPopUp, setData, setTime, time, animationTrigger} : 
   {showPopUp: Function, setData: Function, setTime: Function, time: number, animationTrigger : Boolean} ){
@@ -10,10 +9,6 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
     [key: string]: boolean;
   }  
   const [availability, setAvailability] = useState<Availability>({});
-  // Функция для обновления состояния на основании данных от дочернего компонента DateButtons
-  const checkAvailability = (availability: SetStateAction<Availability>) => {
-    setAvailability(availability);
-  };
 
   // Обработка нажатия на кнопки (поменять значение time на новое)
   const changeDateTime = (event : React.MouseEvent<HTMLButtonElement>, time : number) => {
@@ -34,7 +29,10 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
           <p className="text-center text-2xl font-bold">Выберите дату и время</p>
           <div className="flex flex-col gap-5">
             <p className="font-bold text-2xl">Июль</p>
-            <DateButtons sendAvailability={checkAvailability} size='small' />
+            <DateButtons
+            availability={availability}
+            setAvailability={setAvailability}
+            size='small' />
           </div>
 
 

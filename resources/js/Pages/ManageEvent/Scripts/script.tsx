@@ -2,7 +2,6 @@ import { EventInterface } from "@/app";
 import { useDate } from "@/Components/contexts/DateContext";
 import { useEffect } from "react";
 
-
 export function setDateTimeFromInitialData(initialData: EventInterface | null, setTime: Function, setData: Function){
   
   const { setNewDate } = useDate();

@@ -7,6 +7,7 @@ import ImageInput from "./ImageInput";
 import DatePopUp from "./DatePopUp";
 import { setDateTimeFromInitialData } from "../Scripts/script";
 import { useDate } from "@/Components/contexts/DateContext";
+import { submit } from "../Scripts/api";
 
 export default function EventForm({initialData} : {initialData: EventInterface | null}) {
   // отслеживание состояния переменной time, по ней мы определяем показывать ли элемент DateComponent
@@ -62,58 +63,7 @@ export default function EventForm({initialData} : {initialData: EventInterface |
     file?: string;
   }
   const [errors, setErrors] = useState<Errors>({});
-
-  async function submit(e : any) {
-    e.preventDefault();
-    const url = isEditForm ? `/events/edit/` : `/events/create`;
-    try {
-      const response = await axios({
-        method: 'post',
-        url: url,
-        data: {
-          name: data.name,
-          date: data.date,
-          short_description: data.short_description,
-          description: data.description,
-          time: data.timeNum,
-          price: data.price,
-          lecturer_id: data.lecturer_id,
-          file: data.file,
-          event_id: initialData?.id,
-        },
-        headers: {'Content-Type': 'multipart/form-data',}});
-      
-      if (response.data == 'Success'){
-        router.get(route('lecturer'));
-      }
-      
-      const eventId = response.data.event.id;
-
-      // Затем загружаем файл, связанный с этим ивентом
-      const formData = new FormData();
-      if (data.file !== null) {
-        formData.append('file', data.file);
-      }
-      formData.append('event_id', eventId);
-
-      await axios.post(route('uploadFile'), formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }})
-        .then(response => {
-          router.visit('/cabinet/lecturer');
-        })
-        .catch(error => {
-          console.error('Ошибка при загрузке файла:', error);
-        });
-        
-
-    } catch(error : any) {
-      setErrors(error.response.data.errors);
-      console.error('Ошибка:', error);
-    } 
-  };
-
+  
   // отслеживание состояния открыт попап или нет
   const [ popUpOpened, setPopUpOpened ] = useState(Boolean);
   const [animationTrigger, setAnimationTrigger] = useState(false);
@@ -141,7 +91,7 @@ export default function EventForm({initialData} : {initialData: EventInterface |
     ) : (
       <h2 className="text-primary self-center font-bold text-5xl">Создать мастер-класс</h2>
     )}
-    <form className="gap-8 flex flex-col items-center" onSubmit={submit}>
+    <form className="gap-8 flex flex-col items-center" onSubmit={(e) => submit(e, isEditForm, data, initialData, setErrors)}>
             <div className="flex flex-col gap-3">
 
               <p className="text-2xl text-primary font-bold">Название</p>
