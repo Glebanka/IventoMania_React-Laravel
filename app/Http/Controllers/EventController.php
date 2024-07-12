@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\User;
 use Inertia\Inertia;
 use Datetime;
+use Intervention\Image\ImageManager;
 use Storage;
 
 class EventController extends Controller{
@@ -272,8 +273,17 @@ class EventController extends Controller{
         // Генерируем уникальное имя файла с привязкой к ID ивента
         $fileName = $eventId . '.' . $file->getClientOriginalExtension();
 
-        // Сохраняем файл в локальном хранилище (в папку public/events)
-        $file->storeAs('public/events', $fileName);
+        // Читаем содержимое файла
+        $binaryData = file_get_contents($file->getRealPath());
+
+        // create new image instance
+        $image = ImageManager::imagick()->read($binaryData);
+
+        // Ресайзим изображение до 600 пикселей по большей стороне
+        $image->scale(width: 1200);
+
+        // Сохраняем измененное изображение в локальном хранилище (в папку public/events)
+        $image->save(storage_path('app/public/events/' . $fileName));
 
         // Возвращаем путь сохраненного файла или другую необходимую информацию
         return redirect(route('events'));
@@ -321,9 +331,18 @@ class EventController extends Controller{
       if(!empty($file)){
         // Генерируем уникальное имя файла с привязкой к ID ивента
         $fileName = $request->event_id . '.' . $file->getClientOriginalExtension();
-        
-        // Сохраняем файл в локальном хранилище (в папку public/events)
-        $file->storeAs('public/events', $fileName);
+
+        // Читаем содержимое файла
+        $binaryData = file_get_contents($file->getRealPath());
+
+        // create new image instance
+        $image = ImageManager::imagick()->read($binaryData);
+
+        // Ресайзим изображение до 600 пикселей по большей стороне
+        $image->scale(width: 1200);
+
+        // Сохраняем измененное изображение в локальном хранилище (в папку public/events)
+        $image->save(storage_path('app/public/events/' . $fileName));
       }
 
       return response()->json('Success', 201);
