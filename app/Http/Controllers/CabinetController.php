@@ -165,7 +165,7 @@ class CabinetController extends Controller
     $result2 = Event::where([
       'id' => $validatedData['event_id'],
     ])->delete();
-      
+  
     return response()->json(['message' => 'Успешно удалено'], 200);
   }
 }

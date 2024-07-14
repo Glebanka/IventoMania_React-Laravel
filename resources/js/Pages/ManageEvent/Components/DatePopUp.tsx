@@ -20,9 +20,10 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
   }
 
   return (
-    <div className="w-full h-full fixed left-0 top-0 bg-slate-700 bg-opacity-55 z-10">
+    <div className="w-full h-full fixed left-0 top-0 bg-slate-700 bg-opacity-55 z-10" onClick={(event) => showPopUp(event, false)}>
       <div className="popUpWrapper fixed -translate-y-1/2 top-2/4 h-5/6 w-full">
-        <div className={"popUp flex flex-col gap-9 fixed h-full translate-x-1/2 right-1/2 bg-white rounded-3xl px-6 py-5 " + (animationTrigger ? "active" : "")}>
+        <div className={"popUp flex flex-col gap-9 fixed h-full translate-x-1/2 right-1/2 bg-white rounded-3xl px-6 py-5 " + (animationTrigger ? "active" : "")}
+        onClick={(event) => event.stopPropagation()}>
           <button onClick={(event) => showPopUp(event, false)} className="absolute right-6">
             <CloseSVG />
           </button>

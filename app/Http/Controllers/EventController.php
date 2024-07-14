@@ -153,7 +153,6 @@ class EventController extends Controller{
   }
 
   // функция для показа страницы создания ивента
-
   public function checkAvailability(Request $request)
     {
       $date = $request->input('date');
@@ -240,7 +239,8 @@ class EventController extends Controller{
         //   'event' => $event->only('id', 'name', 'datetime', 'short_description', 'description', 'place_id', 'price', 'confirmed', 'lecturer_id'),
         //   'file' => $file,
         // ]);
-    }
+  }
+
   protected function create(array $data)
     {
       return Event::create([
@@ -253,7 +253,7 @@ class EventController extends Controller{
           'confirmed' => '0',
           'lecturer_id' => $data['lecturer_id'],
       ]);
-    }
+  }
 
   public function fileUpload(Request $request)
     {
@@ -287,7 +287,7 @@ class EventController extends Controller{
 
         // Возвращаем путь сохраненного файла или другую необходимую информацию
         return redirect(route('events'));
-    }
+  }
     
   public function showEditForm($id){
     $event = Event::findOrFail($id);
@@ -303,6 +303,7 @@ class EventController extends Controller{
       'initialData' => $event
     ]);
   }
+
   public function editEvent(Request $request){    
     $event = Event::find($request->event_id);
 

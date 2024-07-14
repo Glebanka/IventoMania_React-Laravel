@@ -7,7 +7,7 @@ import ClockSVG from "@/Components/SVGs/ClockSVG";
 import CalendarSVG from "@/Components/SVGs/CalendarSVG";
 import CancelSVG from "@/Components/SVGs/CancelSVG";
 import ExternalLinkSVG from "@/Components/SVGs/ExternalLinkSVG";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CancelPopUp from "./Components/CancelPopUp";
 
 export default function User({events} : {events: EventInterface[]}) {
@@ -18,12 +18,26 @@ export default function User({events} : {events: EventInterface[]}) {
   }
   const [eventID, setEventID] = useState<number>();
   const [seatID, setSeatID] = useState<number>();
+  const [animationTrigger, setAnimationTrigger] = useState(false);
 
   function handleCancelClick(eventID: number, seatID: number) {
     setpopUpOpened(true);
     setEventID(eventID);
     setSeatID(seatID);
   }
+
+  // при открытии попапа убираем возможность прокручивать фон, то есть overflow ставим hidden
+  useEffect(() => {
+    if (popUpOpened) {
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        setAnimationTrigger(true);
+    }, 10);
+    } else {
+      document.body.style.overflow = 'auto';
+      setAnimationTrigger(false);
+    }
+  }, [popUpOpened]);
   
   return(
     <PageLayout>
@@ -82,6 +96,7 @@ export default function User({events} : {events: EventInterface[]}) {
           setpopUpOpened={setpopUpOpened}
           seatID={seatID} 
           eventID={eventID}
+          animationTrigger={animationTrigger}
           />}
       
     </div>
