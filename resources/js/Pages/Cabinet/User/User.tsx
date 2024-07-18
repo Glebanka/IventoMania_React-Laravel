@@ -1,6 +1,6 @@
 import PageLayout from "@/Layouts/PageLayout";
-import { Link, router, usePage } from "@inertiajs/react";
-import type { EventInterface, UserProps } from "@/app";
+import { Link, router} from "@inertiajs/react";
+import type { EventInterface} from "@/app";
 import TicketSVG from "@/Components/SVGs/TicketSVG";
 import UserSVG from "@/Components/SVGs/UserSVG";
 import ClockSVG from "@/Components/SVGs/ClockSVG";
@@ -50,14 +50,23 @@ export default function User({events} : {events: EventInterface[]}) {
         <>
          <div key={event.id} className="flex xl:flex-row flex-col justify-between align-center cardochka">
             
-            <div className="rounded-83px w-[600px] h-[600px] bg-cover bg-no-repeat bg-center self-center" style={{ backgroundImage: `url(${event.imagePath})` }}></div>
+            <div className={`rounded-83px bg-cover bg-no-repeat bg-center self-center 
+              ${event.isOutDated == true ? 'w-[400px] h-[400px]' : 'w-[600px] h-[600px]'}`}
+              style={{ backgroundImage: `url(${event.imagePath})` }}></div>
             
-            <div className="border-radius w-3/6 flex flex-col sm:justify-between py-16 px-10 self-center xl:self-stretch">
+            <div className={`border-radius flex flex-col  px-10 self-center xl:self-stretch
+              ${event.isOutDated == true ? 'w-[880px] gap-4 justify-center' : 'w-3/6 py-16 sm:justify-between'}`}>
               
-              <Link href={`/event/${event.id}`} className="flex justify-between 4xl">
-                <h3 className='text-primary text-4xl font-bold w-[500px]'>{event.name}</h3>
-                <ExternalLinkSVG w={44} />
-              </Link>
+              {event.isOutDated == true ?
+                <Link href={`/event/${event.id}`} className="flex gap-2 w-full justify-between">
+                  <h3 className='text-primary text-[56px] leading-none font-bold eventTitle'>{event.name}</h3>
+                  <ExternalLinkSVG w={72} />
+                </Link> :
+                <Link href={`/event/${event.id}`} className="flex gap-2 ">
+                  <h3 className='text-primary text-4xl max-w-[500px] hyphens-auto font-bold eventTitle'>{event.name}</h3>
+                  <ExternalLinkSVG w={44} />
+                </Link>
+              }
               
               
               <p className="text-xl leading-tight mb-3 xl:mb-0 hyphens-auto">{event.short_description} </p>
@@ -66,7 +75,7 @@ export default function User({events} : {events: EventInterface[]}) {
 
                 <div className="flex flex-row pb-1 items-center">
                   <CalendarSVG className="me-1" w={25} h={25}></CalendarSVG>
-                  <p className="text-xl leading-none">{event.formattedDate}</p>
+                  <p className="text-xl leading-none">{event.formattedDate}{event.isOutDated == true && ', закончен'}</p>
                 </div>
                 
                 <div className="flex flex-row pb-1 items-center">
@@ -85,7 +94,12 @@ export default function User({events} : {events: EventInterface[]}) {
                 </div>
 
               </div>
-              <button className="btn flex gap-2 rounded-xl px-12 text-2xl w-fit" onClick={() => handleCancelClick(event.id, event.seat_id)}><CancelSVG w={25} />Отменить запись</button> 
+              {event.isOutDated == false &&
+                <button className="btn flex gap-2 rounded-xl px-12 text-2xl w-fit" 
+                onClick={() => handleCancelClick(event.id, event.seat_id)}>
+                  <CancelSVG w={25} /> Отменить запись
+                </button> 
+              }
             </div>
           </div>
         </>

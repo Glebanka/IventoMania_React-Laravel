@@ -1,4 +1,4 @@
-import type { EventInterface, UserProps } from "@/app";
+import type { EventInterface} from "@/app";
 import CalendarSVG from "@/Components/SVGs/CalendarSVG";
 import DescSVG from "@/Components/SVGs/DescSVG";
 import MapSVG from "@/Components/SVGs/MapSVG";
@@ -6,6 +6,7 @@ import MoneySVG from "@/Components/SVGs/MoneySVG";
 import UserSVG from "@/Components/SVGs/UserSVG";
 import PageLayout from "@/Layouts/PageLayout";
 import RentForm from "./Components/RentForm";
+import ClockSVG from "@/Components/SVGs/ClockSVG";
 
 export interface EventProps{
   event: EventInterface;
@@ -16,10 +17,10 @@ export default function Event( {event, imagePath, userName} : EventProps ) {
   
   return(
     <PageLayout>
-        <div className="cardochka flex gap-14 flex-col container max-w-7xl mt-20 pt-5">
-        <h2 className="text-center text-5xl text-primary font-bold">{event.name}</h2>
+        <div className="cardochka flex gap-14 flex-col container max-w-7xl mt-20 pt-5 items-center">
+        <h2 className="text-center text-5xl text-primary font-bold w-[800px] eventTitle">{event.name}</h2>
         <img className="rounded-2xl w-[740px] self-center" src={imagePath}></img>
-        <div className="flex px-[270px] gap-8 flex-col">
+        <div className="flex w-[740px] gap-8 flex-col">
 
           <div className="flex flex-col">
             <div className="flex flex-row pb-1 items-center">
@@ -42,7 +43,15 @@ export default function Event( {event, imagePath, userName} : EventProps ) {
                 <CalendarSVG className="me-1" w={25} h={25}></CalendarSVG>
                 <p className="text-2xl text-primary font-bold">Когда?</p>
             </div>
-              <p className="text-xl">{event.datetime}</p>
+              <p className="text-xl">{event.formattedDate}</p>
+          </div>
+
+          <div className="flex flex-col">
+            <div className="flex flex-row pb-1 items-center">
+                <ClockSVG className="me-1" w={25} h={25}></ClockSVG>
+                <p className="text-2xl text-primary font-bold">Во сколько?</p>
+            </div>
+              <p className="text-xl">{event.formattedTime}</p>
           </div>
 
           <div className="flex flex-col">

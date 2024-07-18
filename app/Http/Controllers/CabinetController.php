@@ -67,6 +67,11 @@ class CabinetController extends Controller
 
       $imagePath = Storage::url("public/events/{$event->id}.jpg");
 
+      // Проверка, прошла ли дата события
+      $currentDate = new DateTime();
+      $isOutDated = $date < $currentDate; // true, если дата события меньше текущей даты
+      
+      $event->isOutDated = $isOutDated;
       $event->imagePath = $imagePath;
       $event->formattedDate = $formattedDate;
       $event->formattedTime = $formattedTime;
@@ -108,6 +113,10 @@ class CabinetController extends Controller
           ];
     
           $date = new DateTime($event -> datetime);
+
+          // Проверка, прошла ли дата события
+          $currentDate = new DateTime();
+          $isOutDated = $date < $currentDate; // true, если дата события меньше текущей даты
     
           // Форматирование даты в нужный формат
           $formattedDate = $date->format('d F Y года');
@@ -120,6 +129,8 @@ class CabinetController extends Controller
           // Форматирование времени в интервал
           $formattedTime = $date->format('H:00') . '-' . $date->format('H:55');
 
+
+        $event->isOutDated = $isOutDated;
         $event->formattedDate = $formattedDate;
         $event->formattedTime = $formattedTime;
         $event->imagePath = Storage::url("public/events/{$event->id}.jpg");
@@ -131,6 +142,55 @@ class CabinetController extends Controller
    return Inertia::render('Cabinet/Lecturer/Lecturer', [
        'events' => $eventsWithParticipants,
    ]);
+  }
+  function showAdminCabinet(){
+
+    // Получаем все события, в которых
+    $events = Event::where('confirmed', 0)->get()->map(function($event){
+      $months = [
+        'January' => 'января',
+        'February' => 'февраля',
+        'March' => 'марта',
+        'April' => 'апреля',
+        'May' => 'мая',
+        'June' => 'июня',
+        'July' => 'июля',
+        'August' => 'августа',
+        'September' => 'сентября',
+        'October' => 'октября',
+        'November' => 'ноября',
+        'December' => 'декабря'
+      ];
+
+      $date = new DateTime($event -> datetime);
+
+      // Форматирование даты в нужный формат
+      $formattedDate = $date->format('d F Y года');
+
+      // Перевод названия месяца на русский
+      $month = $date->format('F');
+
+      $formattedDate = str_replace($month, $months[$month], $formattedDate);
+
+      // Форматирование времени в интервал
+      $formattedTime = $date->format('H:00') . '-' . $date->format('H:55');
+
+      $event->formattedDate = $formattedDate;
+      $event->formattedTime = $formattedTime;
+      $event->imagePath = Storage::url("public/events/{$event->id}.jpg");
+
+      // добавляем имя пользователя
+      $user = User::where('id', $event -> lecturer_id)->first();
+      $userName = $user->fullname;
+
+      $event->lecturer = $userName;
+
+      return $event;
+    });
+    
+    return Inertia::render('Cabinet/Admin/Admin', [
+      'events' => $events,
+    ]);
   }
   function cancelRent(Request $request){
     // Проверка наличия необходимых данных в запросе

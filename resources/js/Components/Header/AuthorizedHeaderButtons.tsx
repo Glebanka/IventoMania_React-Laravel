@@ -20,6 +20,11 @@ export default function AuthorizedHeaderButtons(){
           <CabinetButton />
         </div>}
 
+        {/* Выводим если тип пользователя Admin (id = 3) */}
+        {user.user_type_id == 3 && 
+          <CabinetButton />
+        }
+
       </div>
     );
   }

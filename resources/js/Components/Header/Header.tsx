@@ -1,4 +1,3 @@
-import { useContext, useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import ContentSelectionButtons from "./ContentSelectionButtons";
 import UnauthorizedHeaderButtons from "./UnauthorizedHeaderButtons";
@@ -17,7 +16,7 @@ export default function Header(){
         <Logo />
       </Link>
       
-      {/* Если мы находимся на главной (ContentContext !== undefined) и пользователь не авторизован, то мы выводим кнопки выбора контента */}
+      {/* Если мы находимся на главной useContent() !== undefined и пользователь не авторизован, то мы выводим кнопки выбора контента */}
       {useContent() !== undefined && user == 'undefined' && <ContentSelectionButtons />}
 
       {/* Если пользователь не авторизован и он не на главной, выводим стандартный набор функциональных кнопок */}

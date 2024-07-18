@@ -3,8 +3,6 @@ import { router, usePage } from "@inertiajs/react";
 import axios from "axios";
 import { useEffect } from "react";
 
-
-
 export function rent(seat: string, event: EventInterface, user: UserProps |'undefined'){
   
   // Если пользователь зарегистрирован, делаем запрос

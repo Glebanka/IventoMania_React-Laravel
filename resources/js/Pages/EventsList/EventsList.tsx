@@ -17,10 +17,11 @@ export default function Events( { events } : Events ){
 
     // Фильтрация событий, совпадающих с formattedDate
     const eventsOnSelectedDate = events.filter(event => event.date === formattedDate);
+    const upcomingEvents = eventsOnSelectedDate.filter(event => event.isOutDated == false)
 
     return(<>
-      {eventsOnSelectedDate.length > 0 ? (
-        eventsOnSelectedDate.map(event => (
+      {upcomingEvents.length > 0 ? (
+        upcomingEvents.map(event => (
         <div key={event.id}>
           {formattedDate == event.date && <Event event={event} />}
         </div>

@@ -1,10 +1,9 @@
 import { EventInterface, UserProps } from "@/app";
 import Event from "./Components/Event";
 import PageLayout from "@/Layouts/PageLayout";
-import { Link, router, usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import DeletePopUp from "./Components/DeletePopUp";
-import { useDate } from "@/Components/contexts/DateContext";
 import DateProvider from "@/Components/providers/DateProvider";
 
 function handleLogout() {
@@ -45,7 +44,8 @@ export default function Lecturer( {events} : {events: EventInterface[]}){
 
   return(
     <PageLayout>
-      
+      <DateProvider>
+
       <div className="container max-w-7xl relative">
         <button className="btn text-lg right-0 absolute py-2 px-5" onClick={handleLogout}>Выйти</button>
       </div>
@@ -76,7 +76,7 @@ export default function Lecturer( {events} : {events: EventInterface[]}){
           />
         : null}
       </div>
-      
+      </DateProvider>
     </PageLayout>
   )
 }

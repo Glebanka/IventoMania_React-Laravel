@@ -25,5 +25,14 @@ export default function CabinetButton(){
       <UserCabinetSVG w={48} h={48}></UserCabinetSVG>
     </Link>}
 
+    {/* Выводим если тип пользователя Admin (id = 3) */}
+    {user.user_type_id == 3 && <Link href="/cabinet/admin" className="flex items-center">
+      <div className="flex flex-col items-end justify-between">
+        {/* <p className="text-2xl font-bold text-primary leading-none">{user.fullname}</p> */}
+        <p className="text-3xl font-bold text-primary leading-none">Админ</p>
+      </div>
+      <UserCabinetSVG w={48} h={48}></UserCabinetSVG>
+    </Link>}
+
   </>;
 }

@@ -133,6 +133,7 @@ export default function Register(){
           className={`w-600px text-2xl leading-tight cardochka border-0 font-bold px-11 py-8 ${errors.role ? 'bg-red-300' : 'bg-white'}`}
           value={data.role} 
           onChange={handleChange}>
+            <option value="" disabled>Выберите роль</option>
             <option value="1">Слушатель</option>
             <option value="2">Лектор</option>
           </select>

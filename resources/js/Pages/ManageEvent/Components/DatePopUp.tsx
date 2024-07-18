@@ -1,5 +1,5 @@
 import DateButtons from "@/Components/DateButtons/DateButtons";
-import CloseSVG from "@/Components/SVGs/CloseSVG";
+import CloseSVG from "@/Components/SVGs/ClosePopUpSVG";
 import {useState } from "react";
 
 export default function DatePopUp( {showPopUp, setData, setTime, time, animationTrigger} : 

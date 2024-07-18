@@ -1,4 +1,4 @@
-import CloseSVG from "@/Components/SVGs/CloseSVG";
+import CloseSVG from "@/Components/SVGs/ClosePopUpSVG";
 import { deleteEvent } from "../Scripts/api";
 
 export default function DeletePopUp( {popUpOpened, setpopUpOpened, eventID, animationTrigger} : 

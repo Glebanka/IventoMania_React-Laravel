@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         UserTypes::factory()->withName('listener')->create();
         UserTypes::factory()->withName('lecturer')->create();
+        UserTypes::factory()->withName('admin')->create();
+        $this->call(UserSeeder::class);
     }
 }

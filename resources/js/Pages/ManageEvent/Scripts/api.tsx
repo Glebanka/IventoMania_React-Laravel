@@ -4,7 +4,10 @@ import axios from "axios";
 
 export async function submit(e : any, isEditForm : boolean, data : any, initialData : EventInterface | null, setErrors : Function){
   e.preventDefault();
+  
+  // если форма редактирования, то отправляем запрос на /events/edit/, если создания то на /events/create
   const url = isEditForm ? `/events/edit/` : `/events/create`;
+
   try {
     const response = await axios({
       method: 'post',

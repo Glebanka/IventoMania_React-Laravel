@@ -29,12 +29,13 @@ export interface EventInterface {
   description: string;
   place_id: number;
   price: string;
-  confirmed: boolean;
+  confirmed: number;
   lecturer_id: number;
   
   users: UserProps[];
   
   // Названия переменных с бекенда
+  isOutDated: boolean;
   seat_id: number;
   time: number;
   date: string;

@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import { useContent } from "../contexts/ContentContext";
 
 export default function ContentSelectionButtons() {
@@ -8,8 +9,11 @@ export default function ContentSelectionButtons() {
   };
 
   return (
-    <>
+    <div className="flex gap-8 items-center">
+      <Link href="/login" className="text-primary text-[28px] font-bold">Войти</Link>
+
       <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 pr-4">
+        
 
         <button className={`btn text-xs sm:text-xl leading-none py-2 sm:py-4 sm:w-fit w-24 px-0 sm:px-8 ${content === 'listener' ? 'btn-inactive' : ''}`} 
         onClick={() => handleContentButtonClick('listener')}>Слушатель</button>
@@ -18,6 +22,6 @@ export default function ContentSelectionButtons() {
         onClick={() => handleContentButtonClick('lecturer')}>Лектор</button>
 
       </div>
-    </>
+    </div>
   );
  }

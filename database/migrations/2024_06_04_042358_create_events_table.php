@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('place_id');
             $table->integer('price'); 
             $table->integer('lecturer_id');
-            $table->boolean('confirmed');
+            $table->integer('confirmed');
         });
     }
 

@@ -1,5 +1,5 @@
 
-import CloseSVG from "@/Components/SVGs/CloseSVG";
+import CloseSVG from "@/Components/SVGs/ClosePopUpSVG";
 import { cancelRent } from "../Scripts/api";
 
 export default function CancelPopUp({setpopUpOpened, seatID, eventID, animationTrigger} 

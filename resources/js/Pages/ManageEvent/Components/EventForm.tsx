@@ -1,11 +1,10 @@
 import { router, useForm, usePage } from "@inertiajs/react";
 import DateComponent from "./DateComponent";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { EventInterface, UserProps } from "@/app";
 import ImageInput from "./ImageInput";
 import DatePopUp from "./DatePopUp";
-import { setDateTimeFromInitialData } from "../Scripts/script";
+import { lecturerCheck, setDateTimeFromInitialData, unconfirmedCheck } from "../Scripts/scripts";
 import { useDate } from "@/Components/contexts/DateContext";
 import { submit } from "../Scripts/api";
 
@@ -38,6 +37,10 @@ export default function EventForm({initialData} : {initialData: EventInterface |
 
   // Выставляем дату и время в соответсвии с initialData
   setDateTimeFromInitialData(initialData, setTime, setData);
+
+  lecturerCheck(initialData, isEditForm);
+
+  unconfirmedCheck(initialData);
 
   useEffect(() => {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');;

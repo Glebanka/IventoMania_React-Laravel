@@ -50,7 +50,6 @@ class EventController extends Controller{
     return response()->json($availability);
   }
 
-  // функция забора данных с базы данных для вывода на /event
   public function rentEvent(Request $request){
     // dd($request);
     $request->validate([
@@ -75,6 +74,45 @@ class EventController extends Controller{
     $user = User::where('id', $event -> lecturer_id)->first();
     $userName = $user->fullname;
 
+    $months = [
+      'January' => 'января',
+      'February' => 'февраля',
+      'March' => 'марта',
+      'April' => 'апреля',
+      'May' => 'мая',
+      'June' => 'июня',
+      'July' => 'июля',
+      'August' => 'августа',
+      'September' => 'сентября',
+      'October' => 'октября',
+      'November' => 'ноября',
+      'December' => 'декабря'
+    ];
+
+    $date = new DateTime($event -> datetime);
+
+    // Форматирование даты в нужный формат
+    $formattedDate = $date->format('d F Y года');
+
+    // Перевод названия месяца на русский
+    $month = $date->format('F');
+
+    $formattedDate = str_replace($month, $months[$month], $formattedDate);
+
+    // Форматирование времени в интервал
+    $formattedTime = $date->format('H:00') . '-' . $date->format('H:55');
+
+    $event->formattedDate = $formattedDate;
+
+    $event->formattedTime = $formattedTime;
+
+    // Проверка, прошла ли дата события
+    $currentDate = new DateTime();
+    $isOutDated = $date < $currentDate; // true, если дата события меньше текущей даты
+    
+    $event->isOutDated = $isOutDated;
+
+
     $imagePath = Storage::url("public/events/{$id}.jpg");
     return Inertia::render('Event/Event',[
       'event' => $event,
@@ -85,8 +123,8 @@ class EventController extends Controller{
 
   // функция забора данных с базы данных для вывода на /events
   public function showEvents(){
-
-    $events = Event::all()->map(function ($event) {
+    // забираем все ивенты с бд, у которых confirmed=1
+    $events = Event::where('confirmed', 1)->get()->map(function ($event) {
 
       $months = [
         'January' => 'января',
@@ -104,7 +142,11 @@ class EventController extends Controller{
       ];
 
       $date = new DateTime($event -> datetime);
-
+      
+      // Проверка, прошла ли дата события
+      $currentDate = new DateTime();
+      $isOutDated = $date < $currentDate; // true, если дата события меньше текущей даты
+      
       // Форматирование даты в нужный формат
       $formattedDate = $date->format('d F Y года');
 
@@ -121,6 +163,8 @@ class EventController extends Controller{
       $date = ltrim($date->format('d'), 0) . ' ' . ltrim($date->format('m'), 0);
 
       $imagePath = Storage::url("public/events/{$event->id}.jpg");
+
+      
       // dd([
       //   'id' => $event->id,
       //   'name' => $event->name,
@@ -144,6 +188,7 @@ class EventController extends Controller{
         'formattedTime' => $formattedTime,
         'lecturer' => $user ? $user->fullname : null,
         'imagePath' => $imagePath,
+        'isOutDated' => $isOutDated,
       ];
     });
     
