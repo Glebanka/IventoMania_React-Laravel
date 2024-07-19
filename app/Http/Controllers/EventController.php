@@ -124,7 +124,7 @@ class EventController extends Controller{
   // функция забора данных с базы данных для вывода на /events
   public function showEvents(){
     // забираем все ивенты с бд, у которых confirmed=1
-    $events = Event::where('confirmed', 1)->get()->map(function ($event) {
+    $events = Event::where('confirmed', 1)->orderBy('datetime', 'asc')->get()->map(function ($event) {
 
       $months = [
         'January' => 'января',

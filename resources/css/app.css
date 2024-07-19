@@ -22,8 +22,9 @@
   .cardochka {
     @apply rounded-83px shadow-normal;
   }
-  /* bg-gradient-to-tr from-primary to-primaryTonesUp */
 
+
+  /* кнопки */
   .btn{
     @apply rounded-55px bg-primary text-white font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-pointer;
   }
@@ -37,6 +38,8 @@
     @apply rounded-55px bg-[#E0E0E0] text-[#AEAEAE] font-bold py-4 px-8 text-3xl text-center shadow-normal duration-500 cursor-default;
   }
 
+
+  /* кнопки маленькие */
   .btn-small{
     @apply rounded-lg bg-gray-100 text-black font-bold text-xl w-24 py-2 text-center shadow-small duration-500 cursor-pointer;
   }
@@ -50,6 +53,8 @@
     @apply rounded-lg bg-gray-100 text-gray-300 font-bold w-26 text-xl text-center shadow-small duration-500;
   }
 
+
+  /* кнопки квадратные */
   .btn-square{
     @apply rounded-lg bg-white text-black font-bold text-3xl w-[120px] h-[120px] text-center shadow-small duration-500 cursor-pointer;
   }
@@ -76,6 +81,8 @@
     @apply bg-left-40px;
   }
 
+
+  /* попап */
   .popUpWrapper {
     container-type: size;
   }
@@ -95,8 +102,6 @@
     pointer-events: all;
     visibility: visible;
 }
-  
-
   @container (max-height: 730px) {
     .popUp {
       overflow-y: scroll;
@@ -108,9 +113,51 @@
     }
   }
 
+  /* название для ивента */
   .eventTitle{
     word-wrap: break-word;
     word-break: break-all;
+  }
+
+
+  /* компонент подсказка */
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .tooltip .tooltip-text {
+      visibility: hidden;
+      background-color: #575757;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 10px 5px 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      width: max-content;
+  }
+  
+  .tooltip .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #575757 transparent transparent transparent;
+  }
+  
+  .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
   }
 
 }

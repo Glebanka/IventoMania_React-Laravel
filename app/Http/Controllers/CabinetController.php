@@ -26,7 +26,7 @@ class CabinetController extends Controller
     $eventIds = $userEvents->pluck('event_id')->toArray();
 
     // Получаем все события на основании event_id
-    $events = Event::whereIn('id', $eventIds)->get();
+    $events = Event::whereIn('id', $eventIds)->orderBy('datetime', 'desc')->get();
 
     // Преобразуем события, добавляя seat_id из userEvents
     $eventsWithSeats = $events->map(function ($event) use ($userEvents) {
@@ -89,7 +89,7 @@ class CabinetController extends Controller
    $lecturer = Auth::user();
 
    // Получаем все события, где текущий пользователь является лектором
-   $events = Event::where('lecturer_id', $lecturer->id)->get();
+   $events = Event::where('lecturer_id', $lecturer->id)->orderBy('datetime', 'desc')->get();
 
    // Для каждого события получаем список пользователей, зарегистрированных на это событие
    $eventsWithParticipants = $events->map(function ($event) {

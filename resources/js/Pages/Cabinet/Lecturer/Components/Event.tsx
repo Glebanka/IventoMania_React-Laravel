@@ -9,6 +9,7 @@ import PencilSVG from "@/Components/SVGs/PencilSVG";
 import TickSVG from "@/Components/SVGs/TickSVG";
 import TickWithClockSVG from "@/Components/SVGs/TickWithClockSVG";
 import TrashSVG from "@/Components/SVGs/TrashSVG";
+import Tooltip from "@/Components/Tooltip";
 import { Link } from "@inertiajs/react";
 
 export default function Event( {event, handleDeleteClick, handleChangeClick} :
@@ -16,16 +17,20 @@ export default function Event( {event, handleDeleteClick, handleChangeClick} :
   return(
     <div key={event.id} className="flex flex-col gap-16 align-center cardochka">
       <div className="flex xl:flex-row flex-col justify-between align-center">
+
+        {/* если ивент уже прошел, то делаем картинку меньше */}
         <div className={`rounded-83px bg-cover bg-no-repeat bg-center self-center 
         ${event.isOutDated == true ? 'w-[400px] h-[400px]' : 'w-[600px] h-[600px]'}`}
         style={{ backgroundImage: `url(${event.imagePath})` }}></div>
         
-        <div className={`border-radius flex flex-col sm:justify-between py-16 px-10 self-center xl:self-stretch
-        ${event.isOutDated == true ? 'w-[880px] gap-4 justify-center' : 'w-3/6 py-16 sm:justify-between'} py-16`}>
+        {/* если ивент уже прошел, то стиль карточки будет другой */}
+        <div className={`border-radius flex flex-col px-10 self-center xl:self-stretch
+        ${event.isOutDated == true ? 'w-[880px] gap-4 justify-center' : 'w-3/6 py-16 sm:justify-between'}`}>
           
+          {/* если ивент уже прошел, то заголовок будет больше */}
           {event.isOutDated == true ?
           <Link href={`/event/${event.id}`} className="flex gap-2 w-full justify-between">
-            <h3 className='text-primary text-[56px] font-bold eventTitle'>{event.name}</h3>
+            <h3 className='text-primary text-[56px] leading-none font-bold eventTitle max-w-[720px]'>{event.name}</h3>
             <ExternalLinkSVG w={72} />
           </Link> :
           <Link href={`/event/${event.id}`} className="flex gap-2 ">
@@ -39,15 +44,27 @@ export default function Event( {event, handleDeleteClick, handleChangeClick} :
           
           <div className="flex flex-col mb-3 xl:mb-0">
 
-            <div className="flex flex-row pb-1 items-center">
+            <div className="flex flex-row pb-1 items-center text-xl *:leading-none">
               {event.confirmed == 0 ? <>
-                <TickWithClockSVG className="me-1" w={25} h={25} /><p className="text-xl leading-none">Ожидает подтверждения</p>
+                <TickWithClockSVG className="me-1" w={25} h={25} />
+                <p>Ожидает подтверждения</p>
+                <Tooltip w={21} h={21} fill="#575757">
+                  <span>Подождите некоторое время, чтобы админ<br/>проверил ваш мастер-класс перед публиацией.</span>
+                </Tooltip>
               </> 
               : event.confirmed == 1 ? <>
-                <TickSVG fill="#1384D6" className="me-1" w={25} h={25} /><p className="text-xl leading-none">Подтвержден</p> 
+                <TickSVG fill="#1384D6" className="me-1" w={25} h={25} />
+                <p>Подтвержден</p>
+                <Tooltip w={21} h={21} fill="#575757">
+                  <span>Отлично! Ваш мастер-класс прошел проверку.<br/>Теперь на него могут записаться пользователи.</span>
+                </Tooltip> 
               </>
               : event.confirmed == 2 ? <>
-                <CloseSVG fill="#1384D6" className="me-1" w={25} h={25} /><p className="text-xl leading-none">Отменен</p>
+                <CloseSVG fill="#1384D6" className="me-1" w={25} h={25} />
+                <p>Отменен</p>
+                <Tooltip w={21} h={21} fill="#575757">
+                  <span>Мастер-класс не прошел проверку.<br/>Попробуйте создать новый.</span>
+                </Tooltip>
               </>
               : null}
               
@@ -60,12 +77,21 @@ export default function Event( {event, handleDeleteClick, handleChangeClick} :
 
             <div className="flex flex-row pb-1 items-center">
               <CalendarSVG className="me-1" w={25} h={25}></CalendarSVG>
-              <p className="text-xl leading-none">{event.formattedDate}{event.isOutDated == true && ', закончен'}</p>
+              <p className="text-xl leading-none">{event.formattedDate}
+              </p>
             </div>
             
+            {/* если ивент уже прошел, то он покажет доп информацию */}
             <div className="flex flex-row pb-1 items-center">
               <ClockSVG className="me-1" w={25} h={25}></ClockSVG>
-              <p className="text-xl leading-none"> {event.formattedTime} </p>
+              <p className="text-xl leading-none flex"> {event.formattedTime}{event.isOutDated == true && (
+                <div className="flex">, закончен
+                  <Tooltip w={21} h={21} fill="#575757">
+                    <span>Вы не можете редактировать этот мастер-класс.<br/>Он удалится сам через пять дней</span>
+                  </Tooltip>
+                </div>
+                )}
+              </p>
             </div>
 
           </div>

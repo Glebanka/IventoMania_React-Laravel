@@ -7,6 +7,7 @@ import DatePopUp from "./DatePopUp";
 import { lecturerCheck, setDateTimeFromInitialData, unconfirmedCheck } from "../Scripts/scripts";
 import { useDate } from "@/Components/contexts/DateContext";
 import { submit } from "../Scripts/api";
+import Tooltip from "@/Components/Tooltip";
 
 export default function EventForm({initialData} : {initialData: EventInterface | null}) {
   // отслеживание состояния переменной time, по ней мы определяем показывать ли элемент DateComponent
@@ -95,6 +96,7 @@ export default function EventForm({initialData} : {initialData: EventInterface |
       <h2 className="text-primary self-center font-bold text-5xl">Создать мастер-класс</h2>
     )}
     <form className="gap-8 flex flex-col items-center" onSubmit={(e) => submit(e, isEditForm, data, initialData, setErrors)}>
+
             <div className="flex flex-col gap-3">
 
               <p className="text-2xl text-primary font-bold">Название</p>
@@ -126,7 +128,12 @@ export default function EventForm({initialData} : {initialData: EventInterface |
             
             <div className="flex flex-col gap-3">
 
-              <p className="text-2xl text-primary font-bold">Краткое описание</p>
+              <div className="flex">
+                <p className="text-2xl text-primary font-bold">Краткое описание</p>
+                <Tooltip w={21} h={21} fill="#1384D6">
+                  <span className="text-xl">Постарайтесь заинтриговать пользователя в нескольких приложениях, <br/>этот текст будет виден в превью мастер-класса.</span>
+                </Tooltip>
+              </div>
               <textarea
               className={`w-[600px] h-72 text-2xl leading-tight cardochka rounded-55px border-0 font-bold px-11 py-8 ${errors.short_description ? 'bg-red-300' : 'bg-white'}`} 
               placeholder="Введите краткое описание" 
@@ -141,7 +148,12 @@ export default function EventForm({initialData} : {initialData: EventInterface |
             
             <div className="flex flex-col gap-3">
 
-              <p className="text-2xl text-primary font-bold">Описание</p>
+              <div className="flex">
+                <p className="text-2xl text-primary font-bold">Описание</p>
+                <Tooltip w={21} h={21} fill="#1384D6">
+                  <span className="text-xl">Постарайтесь ответить на вопрос: "Что будем делать?"<br/>Добавьте всю необходимую информацию.</span>
+                </Tooltip>
+              </div>
               <textarea
               className={`w-[600px] h-96 text-2xl leading-tight cardochka rounded-55px border-0 font-bold px-11 py-8 ${errors.description ? 'bg-red-300' : 'bg-white'}`} 
               placeholder="Введите описание" 
@@ -155,8 +167,12 @@ export default function EventForm({initialData} : {initialData: EventInterface |
             </div>
             
             <div className="flex flex-col gap-3">
-
-              <p className="text-2xl text-primary font-bold">Цена, ₽</p>
+              <div className="flex">
+                <p className="text-2xl text-primary font-bold">Цена, ₽</p>
+                <Tooltip w={21} h={21} fill="#1384D6">
+                  <span className="text-xl">Для каждого записавшегося.</span>
+                </Tooltip>
+              </div>
               <input type="number"
               className={`w-[600px] text-2xl leading-tight cardochka border-0 font-bold px-11 py-8 ${errors.price ? 'bg-red-300' : 'bg-white'}`} 
               placeholder="1000" 
