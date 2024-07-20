@@ -1,14 +1,16 @@
 import Footer from "@/Components/Footer";
 import Header from "@/Components/Header/Header";
-import DateProvider from "@/Components/providers/DateProvider";
+import ContentProvider from "@/Components/providers/ContentProvider";
 import { Head } from "@inertiajs/react";
 
 export default function Page( {children} : { children : React.ReactNode } ){
   return(
     <div>
       <Head title="Ивентомания" />
-      <Header />
-      {children}
+      <ContentProvider>
+        <Header />
+        {children}
+      </ContentProvider>
       <Footer />
     </div>
   );

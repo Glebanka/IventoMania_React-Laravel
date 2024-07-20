@@ -11,6 +11,5 @@ export const useDate = () => {
   if (!context) {
     throw new Error('useDate must be used within a DateProvider');
   }
-  
   return context;
 };

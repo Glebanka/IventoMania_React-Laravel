@@ -3,11 +3,13 @@ import ContentSelectionButtons from "./ContentSelectionButtons";
 import UnauthorizedHeaderButtons from "./UnauthorizedHeaderButtons";
 import AuthorizedHeaderButtons from "./AuthorizedHeaderButtons";
 import Logo from "../Logo";
-import { useContent } from "../contexts/ContentContext";
+import { UserProps } from "@/app";
 
 export default function Header(){
-  const { props } = usePage();
+  const { props } = usePage<{ user: UserProps | null }>();
   const user = props.user;
+
+  const isIndexPage = window.location.pathname === '/';
 
   return(
 
@@ -15,16 +17,14 @@ export default function Header(){
       <Link href="/">
         <Logo />
       </Link>
-      
-      {/* Если мы находимся на главной useContent() !== undefined и пользователь не авторизован, то мы выводим кнопки выбора контента */}
-      {useContent() !== undefined && user == 'undefined' && <ContentSelectionButtons />}
+        {/* Если мы находимся на главной useContent() !== undefined и пользователь не авторизован, то мы выводим кнопки выбора контента */}
+        {isIndexPage && !user && <ContentSelectionButtons />}
 
-      {/* Если пользователь не авторизован и он не на главной, выводим стандартный набор функциональных кнопок */}
-      {user == 'undefined' && useContent() == undefined && <UnauthorizedHeaderButtons />}
+        {/* Если пользователь не авторизован и он не на главной, выводим стандартный набор функциональных кнопок */}
+        {!user && !isIndexPage && <UnauthorizedHeaderButtons />}
 
-      {/* Если пользователь авторизован, то мы выводим функциональные кнопки для пользователя */}
-      {user !== 'undefined' && <AuthorizedHeaderButtons />}
-
+        {/* Если пользователь авторизован, то мы выводим функциональные кнопки для пользователя */}
+        {user && <AuthorizedHeaderButtons />}
     </header>
   );
 };

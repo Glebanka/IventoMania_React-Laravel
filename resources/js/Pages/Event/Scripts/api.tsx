@@ -3,10 +3,10 @@ import { router, usePage } from "@inertiajs/react";
 import axios from "axios";
 import { useEffect } from "react";
 
-export function rent(seat: string, event: EventInterface, user: UserProps |'undefined'){
+export function rent(seat: string, event: EventInterface, user: UserProps | null){
   
   // Если пользователь зарегистрирован, делаем запрос
-  if (user !== 'undefined') {
+  if (user) {
     const formData = new FormData();
     formData.append('seat_id', seat);
     formData.append('event_id', event.id.toString());
@@ -26,10 +26,10 @@ export function rent(seat: string, event: EventInterface, user: UserProps |'unde
       });
   }
 }
-export function checkUserOnEvent(event: EventInterface, setUserOnEvent : Function, setSeat : Function, user: UserProps | 'undefined') {
-  // отправляет запрос тогда когда даже записей в usersOnEvent нет
+export function checkUserOnEvent(event: EventInterface, setUserOnEvent : Function, setSeat : Function, user: UserProps | null) {
   // проверка на то, человек записался на ивент или нет
-  if (user !== 'undefined') {
+  // отправляет запрос если польвозатель типа слушатель (user.user_type_id == 1)
+  if (user && user.user_type_id == 1) {
       useEffect(() => {
         if (user) {
           axios.post('/api/userOnEventCheck', {

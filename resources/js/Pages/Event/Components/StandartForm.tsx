@@ -8,7 +8,7 @@ export default function StandartForm({ availability, seat, setSeat, event } :
   {availability : Availability, seat : string, setSeat : Function , event : EventInterface}){
     
   // проверяем что за пользователь сейчас зарегистрирован
-  const { props } = usePage<{ user: UserProps | 'undefined' }>();
+  const { props } = usePage<{ user: UserProps | null }>();
   const user = props.user;
 
   return(

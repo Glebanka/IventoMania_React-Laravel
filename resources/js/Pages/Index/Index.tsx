@@ -1,7 +1,6 @@
 import { useContent } from "@/Components/contexts/ContentContext";
 import LecturerContent from "@/Pages/Index/LecturerContent";
 import ListenerContent from "@/Pages/Index/ListenerContent";
-import ContentProvider from "@/Components/providers/ContentProvider";
 import PageLayout from "@/Layouts/PageLayout";
 
 function ContentComponent() {
@@ -20,10 +19,8 @@ function ContentComponent() {
 
 export default function Index(){
   return(
-    <ContentProvider>
-      <PageLayout>
-        <ContentComponent />
-      </PageLayout>
-    </ContentProvider>
+    <PageLayout>
+      <ContentComponent />
+    </PageLayout>
   );
 };

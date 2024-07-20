@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\DateHelper;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\UsersOnEvents;
@@ -10,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class CabinetController extends Controller
 {
@@ -33,33 +33,12 @@ class CabinetController extends Controller
       $userEvent = $userEvents->firstWhere('event_id', $event->id);
       $event->seat_id = $userEvent->seat_id;
 
-      $months = [
-        'January' => 'января',
-        'February' => 'февраля',
-        'March' => 'марта',
-        'April' => 'апреля',
-        'May' => 'мая',
-        'June' => 'июня',
-        'July' => 'июля',
-        'August' => 'августа',
-        'September' => 'сентября',
-        'October' => 'октября',
-        'November' => 'ноября',
-        'December' => 'декабря'
-      ];
+      // Форматирование даты и времени
+      $event->formattedDate = DateHelper::formatDate($event->datetime);
+      $event->formattedTime = DateHelper::formatTime($event->datetime);
+      $event->isOutDated = DateHelper::isOutdated($event->datetime);
 
-      $date = new DateTime($event -> datetime);
-
-      // Форматирование даты в нужный формат
-      $formattedDate = $date->format('d F Y года');
-
-      // Перевод названия месяца на русский
-      $month = $date->format('F');
-
-      $formattedDate = str_replace($month, $months[$month], $formattedDate);
-
-      // Форматирование времени в интервал
-      $formattedTime = $date->format('H:00') . '-' . $date->format('H:55');
+      $date = new DateTime($event->datetime);
 
       $date = ltrim($date->format('d'), 0) . ' ' . ltrim($date->format('m'), 0);
       
@@ -67,14 +46,7 @@ class CabinetController extends Controller
 
       $imagePath = Storage::url("public/events/{$event->id}.jpg");
 
-      // Проверка, прошла ли дата события
-      $currentDate = new DateTime();
-      $isOutDated = $date < $currentDate; // true, если дата события меньше текущей даты
-      
-      $event->isOutDated = $isOutDated;
       $event->imagePath = $imagePath;
-      $event->formattedDate = $formattedDate;
-      $event->formattedTime = $formattedTime;
       $event->lecturer = $lecturer->fullname;
 
       return $event;
@@ -97,42 +69,11 @@ class CabinetController extends Controller
            ->join('users', 'users.id', '=', 'users_on_events.user_id')
            ->get(['users.fullname as fullname', 'users.age as age', 'users.tel as tel' , 'users.email as email', 'users_on_events.seat_id']);
 
-           $months = [
-            'January' => 'января',
-            'February' => 'февраля',
-            'March' => 'марта',
-            'April' => 'апреля',
-            'May' => 'мая',
-            'June' => 'июня',
-            'July' => 'июля',
-            'August' => 'августа',
-            'September' => 'сентября',
-            'October' => 'октября',
-            'November' => 'ноября',
-            'December' => 'декабря'
-          ];
-    
-          $date = new DateTime($event -> datetime);
+           // Форматирование даты и времени
+        $event->formattedDate = DateHelper::formatDate($event->datetime);
+        $event->formattedTime = DateHelper::formatTime($event->datetime);
+        $event->isOutDated = DateHelper::isOutdated($event->datetime);
 
-          // Проверка, прошла ли дата события
-          $currentDate = new DateTime();
-          $isOutDated = $date < $currentDate; // true, если дата события меньше текущей даты
-    
-          // Форматирование даты в нужный формат
-          $formattedDate = $date->format('d F Y года');
-    
-          // Перевод названия месяца на русский
-          $month = $date->format('F');
-    
-          $formattedDate = str_replace($month, $months[$month], $formattedDate);
-    
-          // Форматирование времени в интервал
-          $formattedTime = $date->format('H:00') . '-' . $date->format('H:55');
-
-
-        $event->isOutDated = $isOutDated;
-        $event->formattedDate = $formattedDate;
-        $event->formattedTime = $formattedTime;
         $event->imagePath = Storage::url("public/events/{$event->id}.jpg");
         $event->users = $participants;
 
@@ -147,36 +88,11 @@ class CabinetController extends Controller
 
     // Получаем все события, в которых
     $events = Event::where('confirmed', 0)->get()->map(function($event){
-      $months = [
-        'January' => 'января',
-        'February' => 'февраля',
-        'March' => 'марта',
-        'April' => 'апреля',
-        'May' => 'мая',
-        'June' => 'июня',
-        'July' => 'июля',
-        'August' => 'августа',
-        'September' => 'сентября',
-        'October' => 'октября',
-        'November' => 'ноября',
-        'December' => 'декабря'
-      ];
+      // Форматирование даты и времени
+      $event->formattedDate = DateHelper::formatDate($event->datetime);
+      $event->formattedTime = DateHelper::formatTime($event->datetime);
+      $event->isOutDated = DateHelper::isOutdated($event->datetime);
 
-      $date = new DateTime($event -> datetime);
-
-      // Форматирование даты в нужный формат
-      $formattedDate = $date->format('d F Y года');
-
-      // Перевод названия месяца на русский
-      $month = $date->format('F');
-
-      $formattedDate = str_replace($month, $months[$month], $formattedDate);
-
-      // Форматирование времени в интервал
-      $formattedTime = $date->format('H:00') . '-' . $date->format('H:55');
-
-      $event->formattedDate = $formattedDate;
-      $event->formattedTime = $formattedTime;
       $event->imagePath = Storage::url("public/events/{$event->id}.jpg");
 
       // добавляем имя пользователя

@@ -8,8 +8,7 @@ export async function submit(e : any, isEditForm : boolean, data : any, initialD
   // если форма редактирования, то отправляем запрос на /events/edit/, если создания то на /events/create
   const url = isEditForm ? `/events/edit/` : `/events/create`;
 
-  try {
-    const response = await axios({
+    await axios({
       method: 'post',
       url: url,
       data: {
@@ -23,35 +22,12 @@ export async function submit(e : any, isEditForm : boolean, data : any, initialD
         file: data.file,
         event_id: initialData?.id,
       },
-      headers: {'Content-Type': 'multipart/form-data',}});
-    
-    if (response.data == 'Success'){
-      router.get(route('lecturer'));
-    }
-    
-    const eventId = response.data.event.id;
-
-    // Затем загружаем файл, связанный с этим ивентом
-    const formData = new FormData();
-    if (data.file !== null) {
-      formData.append('file', data.file);
-    }
-    formData.append('event_id', eventId);
-
-    await axios.post(route('uploadFile'), formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }})
+      headers: {'Content-Type': 'multipart/form-data',}})
       .then(response => {
         router.visit('/cabinet/lecturer');
       })
       .catch(error => {
-        console.error('Ошибка при загрузке файла:', error);
+        console.error('Ошибка:', error);
+        setErrors(error.response.data.errors);
       });
-      
-
-  } catch(error : any) {
-    setErrors(error.response.data.errors);
-    console.error('Ошибка:', error);
-  } 
 };

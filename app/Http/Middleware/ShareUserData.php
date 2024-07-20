@@ -18,7 +18,7 @@ class ShareUserData
     public function handle(Request $request, Closure $next)
     {
         Inertia::share('user', function () {
-            return Auth::check() ? Auth::user() : 'undefined';
+            return Auth::check() ? Auth::user() : null;
         });
 
         return $next($request);
