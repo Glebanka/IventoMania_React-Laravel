@@ -36,6 +36,8 @@ export function lecturerCheck(initialData: EventInterface | null, isEditForm: bo
     }
   }, []);
 }
+
+// если это форма редактирования и ивент отклонен(initialData?.confirmed == 2), то мы редиректим обратно
 export function unconfirmedCheck(initialData: EventInterface | null){
   useEffect(() => {
     if(initialData?.confirmed == 2) {

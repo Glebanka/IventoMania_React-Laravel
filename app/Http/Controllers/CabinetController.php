@@ -6,6 +6,7 @@ use App\Helpers\DateHelper;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\UsersOnEvents;
+use App\Traits\FileDeletionTrait;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ use Inertia\Inertia;
 
 class CabinetController extends Controller
 {
+  use FileDeletionTrait;
   function showUserCabinet(){
 
     // Получаем текущего пользователя
@@ -56,6 +58,27 @@ class CabinetController extends Controller
       'events' => $eventsWithSeats,
   ]);
   }
+  function cancelRent(Request $request){
+    // Проверка наличия необходимых данных в запросе
+    $validatedData = $request->validate([
+      'seat_id' => 'required|integer',
+      'event_id' => 'required|integer',
+      'user_id' => 'required|integer'
+  ]);
+    // Поиск и удаление записи
+    $deleteCount = UsersOnEvents::where([
+      'seat_id' => $validatedData['seat_id'],
+      'event_id' => $validatedData['event_id'],
+      'user_id' => $validatedData['user_id'],
+    ])->delete();
+      
+    // Проверка успешности удаления
+    if ($deleteCount > 0) {
+        return response()->json(['message' => 'Бронирование успешно отменено'], 200);
+    } else {
+        return response()->json(['message' => 'Ошибка при отмене бронирования, запись не найдена'], 404);
+    }
+  }
   function showLecturerCabinet(){
    // Получаем текущего пользователя
    $lecturer = Auth::user();
@@ -84,6 +107,23 @@ class CabinetController extends Controller
        'events' => $eventsWithParticipants,
    ]);
   }
+  function deleteEvent(Request $request){
+    // Проверка наличия необходимых данных в запросе
+    $validatedData = $request->validate([
+      'event_id' => 'required|integer',
+    ]);
+
+    $result = UsersOnEvents::where([
+      'event_id' => $validatedData['event_id'],
+    ])->delete();
+    $result2 = Event::where([
+      'id' => $validatedData['event_id'],
+    ])->delete();
+
+    $this->deleteEventFiles($validatedData['event_id']);
+  
+    return response()->json(['message' => 'Успешно удалено'], 200);
+  }
   function showAdminCabinet(){
 
     // Получаем все события, в которых
@@ -107,41 +147,5 @@ class CabinetController extends Controller
     return Inertia::render('Cabinet/Admin/Admin', [
       'events' => $events,
     ]);
-  }
-  function cancelRent(Request $request){
-    // Проверка наличия необходимых данных в запросе
-    $validatedData = $request->validate([
-      'seat_id' => 'required|integer',
-      'event_id' => 'required|integer',
-      'user_id' => 'required|integer'
-  ]);
-    // Поиск и удаление записи
-    $deleteCount = UsersOnEvents::where([
-      'seat_id' => $validatedData['seat_id'],
-      'event_id' => $validatedData['event_id'],
-      'user_id' => $validatedData['user_id'],
-    ])->delete();
-      
-    // Проверка успешности удаления
-    if ($deleteCount > 0) {
-        return response()->json(['message' => 'Бронирование успешно отменено'], 200);
-    } else {
-        return response()->json(['message' => 'Ошибка при отмене бронирования, запись не найдена'], 404);
-    }
-  }
-  function deleteEvent(Request $request){
-    // Проверка наличия необходимых данных в запросе
-    $validatedData = $request->validate([
-      'event_id' => 'required|integer',
-    ]);
-
-    $result = UsersOnEvents::where([
-      'event_id' => $validatedData['event_id'],
-    ])->delete();
-    $result2 = Event::where([
-      'id' => $validatedData['event_id'],
-    ])->delete();
-  
-    return response()->json(['message' => 'Успешно удалено'], 200);
   }
 }

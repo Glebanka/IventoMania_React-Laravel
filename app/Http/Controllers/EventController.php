@@ -177,6 +177,12 @@ class EventController extends Controller{
         // Работа с датами
         $date = $request['date'];
         $hour = $request['time'];
+
+        // Если $hour меньше 10, добавляем ведущий ноль
+        if ($hour < 10) {
+          $hour = '0' . $hour;
+        }
+
         $datetime = ['datetime' => $date . ' ' . $hour . ':00:00'];
         $request->merge($datetime);
 
@@ -210,12 +216,8 @@ class EventController extends Controller{
 
         $this->fileUpload($file, $event->id);
 
-        return response()->json(['event' => $event], 201);
-        // // return redirect()->route('events');
-        // return Inertia::render('EventUpload', [
-        //   'event' => $event->only('id', 'name', 'datetime', 'short_description', 'description', 'place_id', 'price', 'confirmed', 'lecturer_id'),
-        //   'file' => $file,
-        // ]);
+        // Редирект на маршрут кабинета лектора
+        return redirect()->route('lecturer');
   }
 
   protected function create(array $data)
@@ -274,6 +276,12 @@ class EventController extends Controller{
     // Работа с датами
     $date = $request['date'];
     $hour = $request['time'];
+
+    // Если $hour меньше 10, добавляем ведущий ноль
+    if ($hour < 10) {
+      $hour = '0' . $hour;
+    }
+    
     $datetime = ['datetime' => $date . ' ' . $hour . ':00:00'];
     $request->merge($datetime);
 
@@ -310,9 +318,7 @@ class EventController extends Controller{
         $image->save(storage_path('app/public/events/' . $fileName));
       }
 
-      return response()->json('Success', 201);
     }
-    
-    return response()->json('Error', 403);
+    return redirect()->route('lecturer');
   }
 }

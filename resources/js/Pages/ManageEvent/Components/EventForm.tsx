@@ -6,7 +6,7 @@ import ImageInput from "./ImageInput";
 import DatePopUp from "./DatePopUp";
 import { lecturerCheck, setDateTimeFromInitialData, unconfirmedCheck } from "../Scripts/scripts";
 import { useDate } from "@/Components/contexts/DateContext";
-import { submit } from "../Scripts/api";
+// import { submit } from "../Scripts/api";
 import Tooltip from "@/Components/Tooltip";
 
 export default function EventForm({initialData} : {initialData: EventInterface | null}) {
@@ -20,16 +20,24 @@ export default function EventForm({initialData} : {initialData: EventInterface |
   const { props } = usePage<{user: UserProps}>();
   const user = props.user;
 
-  const { data, setData, progress } = useForm({
+  const { data, setData, progress, post, errors, processing } = useForm({
     name: initialData?.name || '',
     short_description: initialData?.short_description || '',
     description: initialData?.description || '',
     date: '',
-    timeNum: initialData?.time || 0,
+    time: initialData?.time || 0,
     price: initialData?.price || '',
     lecturer_id: user.id,
     file: null,
+    event_id: initialData?.id || null,
   });
+
+  function submit(e : any) {
+    e.preventDefault()
+    // если форма редактирования, то отправляем запрос на /events/edit/, если создания то на /events/create
+    const url = isEditForm ? `/events/edit/` : `/events/create`;
+    post(url);
+  }
 
   // назначаем функцию для изменения параметров в useForm
   const handleChange = (e:any) => {
@@ -48,26 +56,14 @@ export default function EventForm({initialData} : {initialData: EventInterface |
     const day = date.getDate();
     const year = date.getFullYear();
     setData('date', `${year}-${month}-${day}`);
-    console.log('сработала дата!');
+    // console.log('сработала дата!');
   }, [date]);
   
-  // console.log('дата времени '+ data.timeNum);
+  // console.log('дата времени '+ data.time);
   // console.log('состояние времени '+ time);
   // console.log('дата лдатыв '+ data.date);
   // console.log('состояние лдатыв '+ date);
 
-
-  interface Errors {
-    name?: string;
-    date?: string;
-    short_description?: string;
-    description?: string;
-    time?: string;
-    price?: string;
-    file?: string;
-  }
-  const [errors, setErrors] = useState<Errors>({});
-  
   // отслеживание состояния открыт попап или нет
   const [ popUpOpened, setPopUpOpened ] = useState(Boolean);
   const [animationTrigger, setAnimationTrigger] = useState(false);
@@ -95,7 +91,7 @@ export default function EventForm({initialData} : {initialData: EventInterface |
     ) : (
       <h2 className="text-primary self-center font-bold text-5xl">Создать мастер-класс</h2>
     )}
-    <form className="gap-8 flex flex-col items-center" onSubmit={(e) => submit(e, isEditForm, data, initialData, setErrors)}>
+    <form className="gap-8 flex flex-col items-center" onSubmit={(e) => submit(e)}>
 
             <div className="flex flex-col gap-3">
 
@@ -208,11 +204,12 @@ export default function EventForm({initialData} : {initialData: EventInterface |
 
             
             {isEditForm ? (
-              <input type="submit" className="btn btn-primary w-fit text-3xl mt-5" value="Сохранить"></input>
+              <input type="submit" className="btn btn-primary w-fit text-3xl mt-5" disabled={processing} value="Сохранить"></input>
             ) : (
-              <input type="submit" className="btn btn-primary w-fit text-3xl mt-5" value="Создать"></input>
+              <input type="submit" className="btn btn-primary w-fit text-3xl mt-5" disabled={processing} value="Создать"></input>
             )}
             
+            {/* Если errors не пуст, то покажет ошибку */}
             {Object.keys(errors).length !== 0 && <strong className="text-red-400">Что-то пошло не так, перепроверьте форму</strong>}
             
           </form>

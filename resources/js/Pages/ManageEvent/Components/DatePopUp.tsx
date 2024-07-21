@@ -15,7 +15,7 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
     event.preventDefault();
     setTime(time);
     
-    setData('timeNum', time);
+    setData('time', time);
     showPopUp(event, false);
   }
 
