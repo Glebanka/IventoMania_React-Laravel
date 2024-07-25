@@ -44,8 +44,8 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
                 <button
                   key={timeSlot}
                   onClick={(event) => changeDateTime(event, timeSlot)}
-                  className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
-                  disabled={availability[timeSlot]}
+                  className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${!availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
+                  disabled={!availability[timeSlot]}
                 >
                   {`${timeSlot}:00-${timeSlot}:50`}
                 </button>
@@ -59,8 +59,8 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
                 <button
                   key={timeSlot}
                   onClick={(event) => changeDateTime(event, timeSlot)}
-                  className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
-                  disabled={availability[timeSlot]}
+                  className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${!availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
+                  disabled={!availability[timeSlot]}
                 >
                   {`${timeSlot}:00-${timeSlot}:50`}
                 </button>
@@ -74,8 +74,8 @@ export default function DatePopUp( {showPopUp, setData, setTime, time, animation
                 <button
                   key={timeSlot}
                   onClick={(event) => changeDateTime(event, timeSlot)}
-                  className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
-                  disabled={availability[timeSlot]}
+                  className={`${time == timeSlot ? 'btn-small-inactive' : ''} w-44 py-4 text-xl ${!availability[timeSlot] ? 'btn-small-unavailable' : 'btn-small'}`}
+                  disabled={!availability[timeSlot]}
                 >
                   {`${timeSlot}:00-${timeSlot}:50`}
                 </button>

@@ -126,7 +126,7 @@ class EventController extends Controller{
     ]);
   }
 
-  // функция для показа страницы создания ивента
+  // функция для проверки занятости времени
   public function checkAvailability(Request $request)
     {
       $date = $request->input('date');
@@ -134,30 +134,46 @@ class EventController extends Controller{
             return response()->json(['error' => 'Date is required'], 400);
         }
 
-      $times = ['8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'];
+      $times = ['08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18'];
       $placeIds = [1, 2, 3];
       $availability = [];
 
       foreach ($times as $time) {
-          $availability[$time] = true;
-
-          foreach ($placeIds as $placeId) {
-              $datetime = $date . ' ' . $time . ':00:00';
-              $exists = Event::where('datetime', $datetime)
-                  ->where('place_id', $placeId)
-                  ->exists();
-
-              if (!$exists) {
-                  $availability[$time] = false;
-                  break;
-              }
-          }
+        $datetime = $date . ' ' . $time . ':00:00';
+        $availability[$time] = true;
+        
+        // проверяем не прошло ли уже это время
+        if (DateHelper::isOutdated($datetime)) {
+          $availability[$time] = false;
+          continue;
+        }
+        
+        // проверка на заполненность placeID
+        $occupiedPlaces = 0;
+        foreach ($placeIds as $placeId) {
+            $exists = Event::where('datetime', $datetime)
+                ->where('place_id', $placeId)
+                ->exists();
+        
+            if ($exists) {
+                $occupiedPlaces++;
+            }
+        }
+      
+        if ($occupiedPlaces == count($placeIds)) {
+            $availability[$time] = false;
+        }
       }
+      // заменяем значения для обработки на фронте
+      $availability['8'] = $availability['08'];
+      unset($availability['08']);
+      $availability['9'] = $availability['09'];
+      unset($availability['09']);
 
     return response()->json($availability);
   }
 
-  // функция записи данных в базу данных
+  // функция валидирования и работы с данными и вызова функций создания ивента и картинки
   public function newEvent(Request $request)
     {
       // dd($request);
@@ -219,7 +235,7 @@ class EventController extends Controller{
         // Редирект на маршрут кабинета лектора
         return redirect()->route('lecturer');
   }
-
+  // функция создания ивента
   protected function create(array $data)
     {
       return Event::create([
@@ -233,7 +249,7 @@ class EventController extends Controller{
           'lecturer_id' => $data['lecturer_id'],
       ]);
   }
-
+  // функция создания картинки
   protected function fileUpload($file, $eventId)
     {
         // Генерируем уникальное имя файла с привязкой к ID ивента

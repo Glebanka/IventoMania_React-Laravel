@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use DateTime;
+use Illuminate\Support\Carbon;
 
 class DateHelper
 {
@@ -37,8 +38,16 @@ class DateHelper
 
     public static function isOutdated($datetime)
     {
-        $date = new DateTime($datetime);
-        $currentDate = new DateTime();
+        // Создаем объект Carbon из переданной даты
+        $date = Carbon::parse($datetime);
+        // Создаем объект Carbon для текущей даты и времени
+        $currentDate = Carbon::now();
+
+        // Добавляем * часов, чтобы сравнять c часовым поясом  
+        $timezoneOffset = config('app.timezone_offset');
+        $currentDate->addHours($timezoneOffset);
+
+        // Сравниваем даты
         return $date < $currentDate;
     }
 }
