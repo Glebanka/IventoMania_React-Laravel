@@ -23,6 +23,61 @@
 ![firefox_SaF4xW9hdS](https://github.com/user-attachments/assets/e3216250-370d-40f1-a151-ff2e6d86a563)
 
 
+### Installation
+
+Clone the repo locally:
+```
+git clone https://github.com/Glebanka/IventoMania_React-Laravel IventoMania
+cd IventoMania
+```
+
+Create an SQLite database.
+```
+touch database/database.sqlite
+```
+
+Setup configuration:
+```
+cp .env.example .env
+```
+
+Generate application key:
+```
+php artisan key:generate
+```
+
+Install PHP dependencies:
+```
+composer install
+```
+
+Install NPM dependencies:
+```
+npm ci
+```
+
+Build assets:
+```
+npm run dev
+```
+
+Run database migrations:
+```
+php artisan migrate
+```
+
+Run database seeder:
+```
+php artisan db:seed
+``` 
+
+Готово! Теперь создавай свой аккаунт или заходи в админку через 
+данные админа:
+``` 
+tel: 89010101010
+pass: password
+```
+
 ### How it works?
 
 <a href="https://inertiajs.com/">Inertia.js</a> помогает использовать React и Laravel на одном и том же сервере. Бекенд часть полностью написана мною на Laravel.
@@ -38,4 +93,4 @@ Typescript was used <br/>
 
 ### My comments on this
 
-Проект на данный момент в разработке. Адаптивной верстки все еще нет. Некоторые функции работают не до конца.
+Проект на данный момент в разработке. Адаптивной верстки все еще нет. Самые значимые функции работают, хотя еще есть что поменять, улучшить и оптимизировать.
