@@ -27,7 +27,7 @@ class UserFactory extends Factory
             'fullname' => 'admin',
             'age' => $this->faker->numberBetween(18, 65),
             'email' => $this->faker->unique()->safeEmail,
-            'password' => Hash::make('password'), // или bcrypt('password')
+            'password' => Hash::make('password'),
             'user_type_id' => 3,
         ];
     }
