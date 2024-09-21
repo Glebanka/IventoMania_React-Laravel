@@ -41,11 +41,6 @@ Setup configuration:
 cp .env.example .env
 ```
 
-Generate application key:
-```
-php artisan key:generate
-```
-
 Install PHP dependencies:
 ```
 composer install
@@ -56,9 +51,9 @@ Install NPM dependencies:
 npm ci
 ```
 
-Build assets:
+Generate application key:
 ```
-npm run dev
+php artisan key:generate
 ```
 
 Run database migrations:
@@ -69,7 +64,22 @@ php artisan migrate
 Run database seeder:
 ```
 php artisan db:seed
-``` 
+```
+
+Create symbolic link for storage 
+```
+php artisan storage:link
+```
+
+Build assets:
+```
+npm run dev
+```
+
+Server start:
+```
+php artisan serve
+```
 
 Готово! Теперь создавай свой аккаунт или заходи в админку через 
 данные админа:
