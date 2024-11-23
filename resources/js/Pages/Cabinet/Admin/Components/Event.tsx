@@ -9,8 +9,8 @@ import UserUploadSVG from "@/Components/SVGs/UserUploadSVG";
 import { Link } from "@inertiajs/react";
 import { confirmEvent, unconfirmEvent } from "../Scripts/api";
 
-export default function Event( {event} :
-  {event: EventInterface}){
+export default function Event( {event} : {event: EventInterface}){
+  
   return(
     <div key={event.id}
     className="flex flex-col gap-16 align-center cardochka">

@@ -26,6 +26,7 @@ Route::get('/', function () {
 // get запрос для показа страницы отдельного ивента
 Route::get('/event/{id}', [EventController::class, 'showEvent'])->name('event');
 // get запрос для показа страницы списка ивентов
+
 Route::get('/events', [EventController::class, 'showEvents'])->name('events');
 
 

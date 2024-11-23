@@ -11,7 +11,7 @@ import BigButton from "./Components/BigButton";
     // создаем пять значений {currentDate, dayOfWeek, day, month } и отдаем их в новый массив dates 
     const dates = generateNextFiveDays();
 
-    const {setNewDate } = useDate();
+    const { setNewDate } = useDate();
 
     // задаем новое значение контексту date
     const handleDateButtonClick = (event : React.MouseEvent<HTMLButtonElement>, date : Date) => {

@@ -39,7 +39,7 @@ export default function Lecturer( {events} : {events: EventInterface[]}){
     }
   }, [popUpOpened]);
   
-  // Фильтрация событий, совпадающих с formattedDate
+  // Фильтрация событий, совпадающих с event.lecturer_id
   const lecturerEvents = events.filter(event => event.lecturer_id === user.id);
 
   return(

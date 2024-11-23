@@ -92,20 +92,20 @@ class EventController extends Controller{
   public function showEvents(){
     // забираем все ивенты с бд, у которых confirmed=1
     $events = Event::where('confirmed', 1)->orderBy('datetime', 'asc')->get()->map(function ($event) {
-
+      
       // Форматирование даты и времени
       $formattedDate = DateHelper::formatDate($event->datetime);
       $formattedTime = DateHelper::formatTime($event->datetime);
       $isOutDated = DateHelper::isOutdated($event->datetime);
-
+      
       $user = User::where('id', $event -> lecturer_id)->first();
-
+      
       $date = new DateTime($event->datetime);
-
+      
       $date = ltrim($date->format('d'), 0) . ' ' . ltrim($date->format('m'), 0);
-
+      
       $imagePath = Storage::url("public/events/{$event->id}.jpg");
-
+      
       return [
         'id' => $event->id,
         'name' => $event->name,
@@ -125,9 +125,8 @@ class EventController extends Controller{
       'events' => $events,
     ]);
   }
-
-  // функция для проверки занятости времени
-  public function checkAvailability(Request $request)
+    // функция для проверки занятости времени
+    public function checkAvailability(Request $request)
     {
       $date = $request->input('date');
         if (!$date) {
@@ -203,7 +202,6 @@ class EventController extends Controller{
         $request->merge($datetime);
 
         // Поиск свободной зоны
-        // Получаем все place_id
         $placeIds = [1, 2, 3];
 
         // Поиск первого свободного place_id
@@ -253,19 +251,19 @@ class EventController extends Controller{
   protected function fileUpload($file, $eventId)
     {
         // Генерируем уникальное имя файла с привязкой к ID ивента
-        $fileName = $eventId . '.' . $file->getClientOriginalExtension();
-
+        $fileName = $eventId;
+        // dd($file);
         // Читаем содержимое файла
         $binaryData = file_get_contents($file->getRealPath());
 
         // create new image instance
-        $image = ImageManager::imagick()->read($binaryData);
+        $image = ImageManager::gd()->read($binaryData);
 
         // Ресайзим изображение до 600 пикселей по большей стороне
         $image->scale(width: 1200);
 
         // Сохраняем измененное изображение в локальном хранилище (в папку public/events)
-        $image->save(storage_path('app/public/events/' . $fileName));
+        $image->toJpeg()->save(storage_path('app/public/events/' . $fileName .'.jpg'));
 
         // Возвращаем путь сохраненного файла или другую необходимую информацию
         return $image;
@@ -301,8 +299,10 @@ class EventController extends Controller{
     $datetime = ['datetime' => $date . ' ' . $hour . ':00:00'];
     $request->merge($datetime);
 
+    // dd($request);
+    
     $file = $request->file('file');
-
+    
     $changedData = [];
     // Получаем все входящие данные запроса
     $inputData = $request->all();
@@ -316,24 +316,9 @@ class EventController extends Controller{
 
     if (!empty($changedData)) {
       $event->update($changedData);
-
-      if(!empty($file)){
-        // Генерируем уникальное имя файла с привязкой к ID ивента
-        $fileName = $request->event_id . '.' . $file->getClientOriginalExtension();
-
-        // Читаем содержимое файла
-        $binaryData = file_get_contents($file->getRealPath());
-
-        // create new image instance
-        $image = ImageManager::imagick()->read($binaryData);
-
-        // Ресайзим изображение до 600 пикселей по большей стороне
-        $image->scale(width: 1200);
-
-        // Сохраняем измененное изображение в локальном хранилище (в папку public/events)
-        $image->save(storage_path('app/public/events/' . $fileName));
-      }
-
+    }
+    if(!empty($file)){
+      $this->fileUpload($file, $event->id);
     }
     return redirect()->route('lecturer');
   }
