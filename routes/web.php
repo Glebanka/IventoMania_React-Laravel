@@ -18,16 +18,16 @@ use Inertia\Inertia;
 */
 
 // get запрос для показа главной страницы
-Route::get('/', function () {
-  return Inertia::render('Index/Index');
-})->name('index');
+// Route::get('/', function () {
+//   return Inertia::render('Index/Index');
+// })->name('index');
 
 
 // get запрос для показа страницы отдельного ивента
 Route::get('/event/{id}', [EventController::class, 'showEvent'])->name('event');
 // get запрос для показа страницы списка ивентов
 
-Route::get('/events', [EventController::class, 'showEvents'])->name('events');
+Route::get('/', [EventController::class, 'showEvents'])->name('index');
 
 
 // функции доступные только авторизованным

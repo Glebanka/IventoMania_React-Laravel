@@ -88,7 +88,7 @@ class EventController extends Controller{
     ]);
   }
 
-  // функция забора данных с базы данных для вывода на /events
+  // функция забора данных с базы данных для вывода на главной странице
   public function showEvents(){
     // забираем все ивенты с бд, у которых confirmed=1
     $events = Event::where('confirmed', 1)->orderBy('datetime', 'asc')->get()->map(function ($event) {
@@ -120,8 +120,7 @@ class EventController extends Controller{
         'isOutDated' => $isOutDated,
       ];
     });
-    
-    return Inertia::render('EventsList/EventsList',[
+    return Inertia::render('Index/Index',[
       'events' => $events,
     ]);
   }

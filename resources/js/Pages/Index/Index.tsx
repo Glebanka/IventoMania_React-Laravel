@@ -1,26 +1,14 @@
-import { useContent } from "@/Components/contexts/ContentContext";
 import LecturerContent from "@/Pages/Index/LecturerContent";
-import ListenerContent from "@/Pages/Index/ListenerContent";
 import PageLayout from "@/Layouts/PageLayout";
+import Events from "@/Components/EventsList/EventsList";
+import { EventInterface } from "@/app";
 
-function ContentComponent() {
-  const { content } = useContent();
 
-  return (
-    <>
-      {/* Если выбран контент для слушателя, то выводим ListenerContent */}
-      {content === 'listener' && <ListenerContent />}
-
-      {/* Если выбран контент для лектора, то выводим LecturerContent */}
-      {content === 'lecturer' && <LecturerContent /> }
-    </>
-  );
-}
-
-export default function Index(){
+export default function Index({ events }: { events: EventInterface[] }) {
   return(
     <PageLayout>
-      <ContentComponent />
+      <LecturerContent />
+      <Events events={events}></Events>
     </PageLayout>
   );
 };

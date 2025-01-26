@@ -26,16 +26,16 @@
 
   /* кнопки */
   .btn{
-    @apply rounded-55px bg-primary text-white font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-pointer;
+    @apply rounded-55px bg-primary text-white font-bold py-4 px-12 text-3xl text-center shadow-button duration-500 cursor-pointer;
   }
   .btn:hover{
     @apply bg-white text-primary;
   }
   .btn-inactive{
-    @apply rounded-55px bg-white text-primary font-bold py-4 px-8 text-3xl text-center shadow-button duration-500 cursor-default;
+    @apply rounded-55px bg-white text-primary font-bold py-4 px-12 text-3xl text-center shadow-button duration-500 cursor-default;
   }
   .btn-unavailable{
-    @apply rounded-55px bg-[#E0E0E0] text-[#AEAEAE] font-bold py-4 px-8 text-3xl text-center shadow-normal duration-500 cursor-default;
+    @apply rounded-55px bg-[#E0E0E0] text-[#AEAEAE] font-bold py-4 px-12 text-3xl text-center shadow-normal duration-500 cursor-default;
   }
 
 

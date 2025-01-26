@@ -27,14 +27,14 @@ export default function RentForm({event} : EventProps){
 
   return(
     <div className="bg-[#E0E0E0] rounded-b-83px flex px-[270px] gap-12 flex-col py-12">
-      {/* Выводит форму для записи на мастер-класс если пользователь типа слушатель */}
-      {user && userOnEvent == false && user.user_type_id == 1 && (
-        <StandartForm availability={availability} seat={seat} setSeat={setSeat} event={event} />
-      )}
-
       {/* Выводим стандартную форму, если пользователь не зарегистрирован */}
       {!user && (
         <StandartForm availability={availability} seat={seat} setSeat={setSeat} event={event}/>
+      )}
+
+      {/* Выводит форму для записи на мастер-класс если пользователь типа слушатель */}
+      {user && userOnEvent == false && user.user_type_id == 1 && (
+        <StandartForm availability={availability} seat={seat} setSeat={setSeat} event={event} />
       )}
 
       {/* Выводит информацию о том что человек записан если он не лектор и уже записан */}
@@ -43,7 +43,12 @@ export default function RentForm({event} : EventProps){
       )}
   
       {/* Если авторизированный пользователь лектор, то выводится просто виджет свободных и занятых мест */}
-      {user && user.user_type_id === 2 || user && user.user_type_id === 3 && (
+      {(user && user.user_type_id === 2) && (
+        <LecturerForm availability={availability} />
+      )}
+      
+      {/* Если авторизированный пользователь админ, то выводится просто виджет свободных и занятых мест */}
+      {(user && user.user_type_id === 3) && (
         <LecturerForm availability={availability} />
       )}
     </div>

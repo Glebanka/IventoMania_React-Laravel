@@ -88,6 +88,11 @@ tel: 89010101010
 pass: password
 ```
 
+Если нужно заполнить тестовые ивенты пропиши:
+```
+php artisan db:seed --class=EventsSeeder
+```
+
 ### How it works?
 
 <a href="https://inertiajs.com/">Inertia.js</a> помогает использовать React и Laravel на одном и том же сервере. Бекенд часть полностью написана мною на Laravel.
